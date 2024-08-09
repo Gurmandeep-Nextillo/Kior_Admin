@@ -1,0 +1,83 @@
+// font-family: 'Kanit', sans-serif;
+// font-family: 'Merriweather', serif;
+// font-family: 'Mukta', sans-serif;
+// font-family: 'Open Sans', sans-serif;
+// font-family: 'PT Serif', serif;
+// font-family: 'Roboto', sans-serif;
+
+//breakpoints
+$breakpoint_XXL: "max-width: 1400px";
+$breakpoint_XL: "max-width: 1200px";
+$breakpoint_LG: "max-width: 992px";
+$breakpoint_MD: "max-width: 768px";
+$breakpoint_SM: "max-width: 576px";
+$breakpoint_450: "max-width: 450px";
+$breakpoint_ESM: "max-width: 385px";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Kanit", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+//Chrome, Safari, Edge, Opera
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+//firfox
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+@mixin display($justify-content, $align-items) {
+    display: flex;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+a {
+    text-decoration: none;
+}
+
+//input
+input {
+    &:focus {
+        box-shadow: none;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+}
+
+.coustom_container {
+    max-width: 1600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 150px;
+
+    @media($breakpoint_XL) {
+        padding: 0 70px;
+    }
+
+    @media($breakpoint_LG) {
+        padding: 0 30px;
+    }
+
+    @media($breakpoint_MD) {
+        padding: 0 18px;
+    }
+
+    @media($breakpoint_SM) {
+        padding: 0 15px;
+    }
+}

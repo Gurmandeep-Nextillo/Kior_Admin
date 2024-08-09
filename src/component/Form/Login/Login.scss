@@ -1,0 +1,75 @@
+.login {
+    @include display(center, center);
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: $background_linear;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: monospace;
+
+    .coustom_container {
+        background: $white;
+        padding: 40px 20px;
+        border-radius: 10px;
+        filter: drop-shadow(1px 1px 6px rgb(131, 68, 68));
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+
+        @media($breakpoint_450) {
+            max-width: 100%;
+            margin: 0 15px;
+        }
+
+        form {
+
+            h2 {
+                text-align: center;
+                color: $black;
+                font-size: 30px;
+                margin-bottom: 20px
+            }
+
+            .form_group {
+                @include display(flex-start, flex-start);
+                flex-direction: column;
+                margin-top: 15px;
+
+                label {
+                    color: $black;
+                    font-size: 20px;
+                    margin-bottom: 5px;
+                }
+
+                input {
+                    background-color: $white;
+                    width: 100%;
+                    border: 1px solid $black;
+                    color: $black;
+                    padding: 12px;
+                    border-radius: 4px;
+                    font-size: 15px;
+                    letter-spacing: .7px;
+
+                    &::placeholder {
+                        color: $black;
+                    }
+                }
+            }
+
+            button {
+                background: $background_linear;
+                width: 100%;
+                padding: 12px;
+                margin-top: 30px;
+                border: 1px solid $white;
+                font-weight: bold;
+                font-size: 16px;
+                border-radius: 4px;
+                color: $white;
+            }
+        }
+    }
+}

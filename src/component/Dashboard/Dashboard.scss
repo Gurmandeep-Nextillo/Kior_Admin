@@ -1,0 +1,54 @@
+.dashboard {
+    padding: 30px 30px 30px 270px;
+    height: 100vh;
+
+    .dashboard_card {
+        @include display(space-between, center);
+        gap: 30px;
+        margin-bottom: 30px;
+
+        .card {
+            border: 1px solid $border_color;
+            padding: 22px;
+            border-radius: 6px;
+            width: 100%;
+            background: $background_linear;
+
+            @media($breakpoint_XL) {
+                padding: 15px;
+            }
+
+            @media($breakpoint_LG) {
+                padding: 10px;
+            }
+
+            .card-body {
+                @include display(space-between, center);
+                gap: 10px;
+
+                .title_text {
+                    .card-title {
+                        margin-bottom: 15px;
+                        color: $white;
+                        font-size: 16px;
+                        font-weight: 600;
+                    }
+
+                    .card-text {
+                        color: $white;
+                    }
+                }
+
+                .submit_btn {
+                    button {
+                        background-color: transparent;
+                        padding: 6px 14px;
+                        color: $white;
+                        border: 1px solid $white;
+                        border-radius: 6px;
+                    }
+                }
+            }
+        }
+    }
+}
