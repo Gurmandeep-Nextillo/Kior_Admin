@@ -86,7 +86,6 @@ const Categories = () => {
         });
     };
 
-
     const handleButtonClick = async () => {
         try {
             const options = {
