@@ -1,9 +1,8 @@
-//loginSlice 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ApiBaseUrl, updateCategoryApi } from "../utils/constants";
 
-export const updateCategory = createAsyncThunk("updateCategory", async () => {
+export const updateCategory = createAsyncThunk("updateCategory", async (payload) => {
     try {
         const config = {
             headers: {
@@ -13,7 +12,7 @@ export const updateCategory = createAsyncThunk("updateCategory", async () => {
             },
         };
         const url = ApiBaseUrl + updateCategoryApi;
-        const response = await axios.put(url, config);
+        const response = await axios.put(url, payload, config);
         return response.data;
     } catch (error) {
         throw error.response.data;

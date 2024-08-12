@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getCategoryListApi } from "../utils/constants";
+import { ApiBaseUrl, getPackageListApi } from "../utils/constants";
 
-export const getCategoryList = createAsyncThunk("getCategoryList", async (payload) => {
+export const getPackageList = createAsyncThunk("getPackageList", async (payload) => {
     try {
         const config = {
             headers: {
@@ -12,40 +12,42 @@ export const getCategoryList = createAsyncThunk("getCategoryList", async (payloa
             },
         };
         const skip = payload.skip
-        const url = `${ApiBaseUrl}${getCategoryListApi}?skip=${skip}&limit=20`;
+        const url = `${ApiBaseUrl}${getPackageListApi}?skip=${skip}&limit=20`;
+        console.log("Url ===>", url)
         const response = await axios.get(url, config);
+        console.log("response package ===>", response.data)
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getCategoryListSlice = createSlice({
-    name: "getCategoryListReducer",
+const getPackageListSlice = createSlice({
+    name: "getPackageListReducer",
 
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetCategoryListData: (state) => {
+        clearGetPackageListData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getCategoryList.pending, (state) => {
+            .addCase(getPackageList.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getCategoryList.fulfilled, (state, action) => {
+            .addCase(getPackageList.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getCategoryList.rejected, (state) => {
+            .addCase(getPackageList.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetCategoryListData } = getCategoryListSlice.actions;
-export default getCategoryListSlice.reducer;
+export const { clearGetPackageListData } = getPackageListSlice.actions;
+export default getPackageListSlice.reducer;

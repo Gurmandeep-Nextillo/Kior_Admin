@@ -2,6 +2,7 @@
     padding-top: 50px;
 
     .table_categories {
+        padding-bottom: 30px;
 
         .categories_head {
             @include display(space-between, initial);
@@ -158,7 +159,8 @@
 
                 th {
                     text-align: center;
-                    padding: 10px;
+                    padding: 15px 10px;
+                    width: 25%;
                 }
             }
 
@@ -268,6 +270,34 @@
                         border-radius: 6px;
                         padding: 10px 20px;
                         color: $white;
+                    }
+                }
+
+                form {
+                    label {
+                        font-size: 18px;
+                        font-weight: 500;
+                        color: $black;
+                    }
+
+                    input {
+                        &::placeholder {
+                            color: $grey;
+                        }
+                    }
+
+                    .button_div {
+                        @include display(center, center);
+
+                        .button_ok {
+                            background-color: $black;
+                            padding: 8px 14px;
+                            color: $white;
+                            font-weight: '600';
+                            border: 1px solid $black;
+                            border-radius: 4px;
+                            margin: 10px 0;
+                        }
                     }
                 }
             }

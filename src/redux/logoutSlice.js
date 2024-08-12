@@ -1,4 +1,3 @@
-//loginSlice 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ApiBaseUrl, logoutApi, } from "../utils/constants";

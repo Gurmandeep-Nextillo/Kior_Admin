@@ -4,8 +4,9 @@ import Modal from 'react-modal';
 import Sidebar from '../Sidebar.js/Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
-import getCategoryListSlice, { getCategoryList } from '../../redux/getCategoryListSlice';
-import categoriesTableSlice, { category } from '../../redux/categoriesTableSlice';
+import { getCategoryList } from '../../redux/getCategoryListSlice';
+import { addCategory } from '../../redux/addCategoriesSlice';
+import { updateCategory } from '../../redux/updateCategorySlice';
 
 const modal_setting = {
     content: {
@@ -25,41 +26,35 @@ const Categories = () => {
     const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
     const [skip, setSkip] = useState(0)
-
+    const [name, setName] = useState("");
     const [isOpen, setOpen] = useState(false);
 
     const getCategoryListSuccess = useSelector((state) => state.getCategoryListReducer.data);
-    const categoriesSuccess = useSelector((state) => state.categoriesTableReducer.data);
+    const addCategorySuccess = useSelector((state) => state.addCategoryReducer.data);
     const updateCategorySuccess = useSelector((state) => state.updateCategoryReducer.data);
 
     useEffect(() => {
-        console.log("getCategoryListSuccess ===>", getCategoryListSuccess)
         if (getCategoryListSuccess != null && getCategoryListSuccess.status == 1) {
             setCategories(getCategoryListSuccess.data);
         }
     }, [getCategoryListSuccess]);
 
     useEffect(() => {
-
         const paylaod = {
             skip: skip,
         }
         dispatch(getCategoryList(paylaod));
-    }, []);
+    }, [skip]);
 
-
-    const [name, setName] = useState("");
 
     useEffect(() => {
-
-        if (categoriesSuccess != null && categoriesSuccess.status == 1) {
-            console.log("Success inner")
+        if (addCategorySuccess != null && addCategorySuccess.status == 1) {
             const paylaod = {
                 skip: skip,
             }
             dispatch(getCategoryList(paylaod));
         }
-    }, [categoriesSuccess]);
+    }, [addCategorySuccess]);
 
     const onSubmitClick = () => {
         setName("")
@@ -71,19 +66,18 @@ const Categories = () => {
                 name: name,
                 image: "image",
             };
-            dispatch(category(payload));
+            dispatch(addCategory(payload));
         }
     };
 
-
-    const [isOn, setIsOn] = useState(false);
-
-    const toggleSwitch = (index) => {
-        setCategories(prevCategories => {
-            const newCategories = [...prevCategories];
-            newCategories[index].isActive = !newCategories[index].isActive;
-            return newCategories;
-        });
+    const toggleSwitch = (item) => {
+        const payload = {
+            name: item.name,
+            categoryId: item._id,
+            isActive: item.isActive == 1 ? 0 : 1,
+            isDeleted: item.isDeleted
+        }
+        dispatch(updateCategory(payload))
     };
 
     const handleButtonClick = async () => {
@@ -121,6 +115,26 @@ const Categories = () => {
         }
     };
 
+    useEffect(() => {
+        if (updateCategorySuccess != null && updateCategorySuccess.status == 1) {
+            const paylaod = {
+                skip: 0,
+            }
+            dispatch(getCategoryList(paylaod));
+        }
+    }, [updateCategorySuccess]);
+
+    const onDeleteClick = (item) => {
+        const payload = {
+            name: item.name,
+            categoryId: item._id,
+            isActive: 0,
+            isDeleted: 1
+        }
+
+        dispatch(updateCategory(payload))
+    }
+
     return (
         <>
             <div className="dashboard">
@@ -155,17 +169,17 @@ const Categories = () => {
                             <tbody>
                                 {categories.length > 0 && categories.map((item, index) => (
                                     <tr>
-                                        <td>image</td>
                                         <td>{item.name}</td>
+                                        <td>image</td>
                                         <td>
                                             <div className='switch_btn_center'>
-                                                <div className={`switch ${isOn ? 'on' : 'off'}`} onClick={() => toggleSwitch(index)}>
+                                                <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
                                                     <div className="toggle"></div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <Button variant="danger" >Delete</Button>
+                                            <Button variant="danger" onClick={() => onDeleteClick(item)}>Delete</Button>
                                         </td>
                                     </tr>
                                 ))}

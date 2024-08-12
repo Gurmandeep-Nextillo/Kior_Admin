@@ -1,9 +1,8 @@
-//loginSlice 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, categoryApi } from "../utils/constants";
+import { ApiBaseUrl, updatePackageApi } from "../utils/constants";
 
-export const category = createAsyncThunk("category", async (payload) => {
+export const updatePackage = createAsyncThunk("updatePackage", async (payload) => {
     try {
         const config = {
             headers: {
@@ -12,41 +11,40 @@ export const category = createAsyncThunk("category", async (payload) => {
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + categoryApi;
-        console.log("payload categories ===>", payload);
-        const response = await axios.post(url, payload, config);
+        const url = ApiBaseUrl + updatePackageApi;
+        const response = await axios.put(url, payload, config);
+        console.log("Update sucess pac", response.data)
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const categoriesTableSlice = createSlice({
-    name: "categoriesTableReducer",
-
+const updatePackageSlice = createSlice({
+    name: "updatePackageReducer",
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearCategoriesTableData: (state) => {
+        clearUpdatePackageData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(category.pending, (state) => {
+            .addCase(updatePackage.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(category.fulfilled, (state, action) => {
+            .addCase(updatePackage.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(category.rejected, (state) => {
+            .addCase(updatePackage.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearCategoriesTableData } = categoriesTableSlice.actions;
-export default categoriesTableSlice.reducer;
+export const { clearUpdatePackageData } = updatePackageSlice.actions;
+export default updatePackageSlice.reducer;

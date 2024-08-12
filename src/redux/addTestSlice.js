@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getCategoryListApi } from "../utils/constants";
+import { addTestApi, ApiBaseUrl } from "../utils/constants";
 
-export const getCategoryList = createAsyncThunk("getCategoryList", async (payload) => {
+export const addTest = createAsyncThunk("addTest", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,41 +11,39 @@ export const getCategoryList = createAsyncThunk("getCategoryList", async (payloa
                 authorization: localStorage.getItem("token"),
             },
         };
-        const skip = payload.skip
-        const url = `${ApiBaseUrl}${getCategoryListApi}?skip=${skip}&limit=20`;
-        const response = await axios.get(url, config);
+        const url = ApiBaseUrl + addTestApi;
+        const response = await axios.post(url, payload, config);
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getCategoryListSlice = createSlice({
-    name: "getCategoryListReducer",
-
+const addTestSlice = createSlice({
+    name: "addTestReducer",
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetCategoryListData: (state) => {
+        clearAddTestData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getCategoryList.pending, (state) => {
+            .addCase(addTest.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getCategoryList.fulfilled, (state, action) => {
+            .addCase(addTest.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getCategoryList.rejected, (state) => {
+            .addCase(addTest.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetCategoryListData } = getCategoryListSlice.actions;
-export default getCategoryListSlice.reducer;
+export const { clearAddTestData } = addTestSlice.actions;
+export default addTestSlice.reducer;

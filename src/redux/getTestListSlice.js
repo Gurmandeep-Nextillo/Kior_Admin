@@ -1,9 +1,8 @@
-//loginSlice 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ApiBaseUrl, getTestListApi } from "../utils/constants";
 
-export const getTestList = createAsyncThunk("getTestList", async () => {
+export const getTestList = createAsyncThunk("getTestList", async (payload) => {
     try {
         const config = {
             headers: {
@@ -12,7 +11,8 @@ export const getTestList = createAsyncThunk("getTestList", async () => {
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + getTestListApi;
+        const skip = payload.skip
+        const url = `${ApiBaseUrl}${getTestListApi}?skip=${skip}&limit=20`;
         const response = await axios.get(url, config);
         return response.data;
     } catch (error) {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import Sidebar from '../Sidebar.js/Sidebar';
-import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategoryList } from '../../redux/getCategoryListSlice';
 import Modal from 'react-modal';
 import { getTestList } from '../../redux/getTestListSlice';
+import { addTest } from '../../redux/addTestSlice';
+import { updateTest } from '../../redux/updateTestSlice';
+import { getCategoryList } from '../../redux/getCategoryListSlice';
 
 const modal_setting = {
     content: {
@@ -25,30 +25,125 @@ const modal_setting = {
 const Test = () => {
 
     const dispatch = useDispatch();
-    const [isOn, setIsOn] = useState(false);
+    const [skip, setSkip] = useState(0)
     const [isOpen, setOpen] = useState(false);
-    const [testes, setTestes] = useState([]);
+    const [test, setTest] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [name, setName] = useState("");
 
     const getTestListSuccess = useSelector((state) => state.getTestListReducer.data);
+    const addTestSuccess = useSelector((state) => state.addTestReducer.data);
+    const updateTestSuccess = useSelector((state) => state.updateTestReducer.data);
+
+    const getCategoryListSuccess = useSelector((state) => state.getCategoryListReducer.data);
 
     useEffect(() => {
-        console.log("getTestListSuccess ===>", getTestListSuccess)
         if (getTestListSuccess != null && getTestListSuccess.status == 1) {
-            setTestes(getTestListSuccess.data);
+            setTest(getTestListSuccess.data);
         }
     }, [getTestListSuccess]);
 
     useEffect(() => {
-        dispatch(getTestList());
-    }, []);
+        const paylaod = {
+            skip: skip,
+        }
+        dispatch(getTestList(paylaod));
 
-    const toggleSwitch = (index) => {
-        setTestes(prevCategories => {
-            const newTestes = [...prevCategories];
-            newTestes[index].isActive = !newTestes[index].isActive;
-            return newTestes;
-        });
+    }, [skip]);
+
+    const onSubmitClick = () => {
+        setName("")
+        setOpen(false);
+        if (name.length == 0) {
+            alert("Please enter name!");
+        } else {
+            const payload = {
+                categoryId: selectedOption,
+                name: name,
+                image: "image",
+            };
+            dispatch(addTest(payload));
+        }
     };
+
+    const toggleSwitch = (item) => {
+        const payload = {
+            name: item.name,
+            testId: item._id,
+            isActive: item.isActive == 1 ? 0 : 1,
+            isDeleted: item.isDeleted
+        }
+        dispatch(updateTest(payload))
+    };
+
+    useEffect(() => {
+        if (addTestSuccess != null && addTestSuccess.status == 1) {
+            const paylaod = {
+                skip: skip,
+            }
+            dispatch(getTestList(paylaod));
+        }
+    }, [addTestSuccess]);
+
+
+    const onDeleteClick = (item) => {
+        const payload = {
+            name: item.name,
+            testId: item._id,
+            isActive: 0,
+            isDeleted: 1,
+        }
+        dispatch(updateTest(payload))
+    }
+
+    useEffect(() => {
+        if (updateTestSuccess != null && updateTestSuccess.status == 1) {
+            const paylaod = {
+                skip: 0,
+            }
+            dispatch(getTestList(paylaod));
+        }
+    }, [updateTestSuccess])
+
+    useEffect(() => {
+        const paylaod = {
+            skip: 0,
+        }
+        dispatch(getCategoryList(paylaod));
+    }, [])
+
+    useEffect(() => {
+        if (getCategoryListSuccess != null && getCategoryListSuccess.status == 1) {
+            setCategories(getCategoryListSuccess.data);
+        }
+    }, [getCategoryListSuccess]);
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        alert(`Selected option: ${selectedOption, selectedOptionName}`);
+    };
+
+
+    const [selectedOption, setSelectedOption] = useState('');
+    const [selectedOptionName, setSelectedOptionName] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const handleInputChange = (event) => {
+        setSelectedOption(event.target.value);
+        setSelectedOptionName(event.target.value);
+        setIsDropdownOpen(true);
+    };
+
+    const handleSelectChange = (item) => {
+        setSelectedOption(item._id);
+        setSelectedOptionName(item.name);
+        setIsDropdownOpen(false);
+    };
+
+    const filteredOptions = getCategoryListSuccess?.data.filter(item =>
+        item.name.toLowerCase().includes(selectedOption.toLowerCase())
+    );
 
     return (
         <>
@@ -79,40 +174,90 @@ const Test = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {testes.map((item, index) => (
+                            {test.map((item, index) => (
                                 <tr >
-                                    <td>image</td>
                                     <td>{item.name}</td>
+                                    <td>image</td>
                                     <td>
                                         <div className='switch_btn_center'>
-                                            <div className={`switch ${isOn ? 'on' : 'off'}`} onClick={() => toggleSwitch(index)}>
+                                            <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
                                                 <div className="toggle"></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <Button variant="danger" >Delete</Button>
+                                        <Button variant="danger" onClick={() => onDeleteClick(item)}>Delete</Button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
+
                     <Modal
                         isOpen={isOpen}
                         style={modal_setting}
                         onRequestClose={() => setOpen(false)}
                     >
                         <div className='modal_content_center'>
-                            <p>Category Image</p>
-                            <div className="add_picture"
-                            // onClick={handleButtonClick}
-                            >
-                                <AddIcon />
-                            </div>
-                            <p>Category Name</p>
-                            <input type='text' placeholder='name' /><br />
+                            <form onSubmit={handleSubmit}>
+                                <label htmlFor="dropdown-input">Category</label><br />
+                                <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                                    <input
+                                        id="dropdown-input"
+                                        type="text"
+                                        placeholder='Select Category'
+                                        value={selectedOptionName}
+                                        onChange={handleInputChange}
+                                        style={{ width: '100%' }}
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                        style={{
+                                            marginLeft: '5px',
+                                            position: 'absolute',
+                                            right: 15,
+                                            top: 20
+                                        }}
+                                    >
+                                        ▼
+                                    </Button>
+                                    {isDropdownOpen && (
+                                        <ul
+                                            style={{
+                                                position: 'absolute',
+                                                zIndex: 1,
+                                                backgroundColor: 'white',
+                                                border: '1px solid #ccc',
+                                                listStyleType: 'none',
+                                                margin: 0,
+                                                padding: '5px',
+                                                width: '100%',
+                                                maxHeight: '150px',
+                                                overflowY: 'auto',
+                                            }}
+                                        >
+                                            {filteredOptions.length > 0 ? (
+                                                filteredOptions.map((item) => (
+                                                    <li
+                                                        key={item._id}
+                                                        onClick={() => handleSelectChange(item)}
+                                                        style={{ padding: '5px', cursor: 'pointer' }}
+                                                    >
+                                                        {item.name}
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <li style={{ padding: '5px' }}>No results found</li>
+                                            )}
+                                        </ul>
+                                    )}
+                                </div>
+                            </form>
+                            <p style={{ marginTop: 16 }}>Test Name</p>
+                            <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                             <div className='submit_btn'>
-                                <Button onClick={() => setOpen(false)}>Submit</Button>
+                                <Button onClick={() => onSubmitClick()} > Submit</Button>
                             </div>
                         </div>
                     </Modal>
