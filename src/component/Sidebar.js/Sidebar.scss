@@ -98,13 +98,11 @@
         svg {
           width: 35px;
           height: 35px;
-          color: $white;
         }
 
         span {
           margin-left: 10px;
           transition: opacity 0.3s;
-          color: $white;
           font-weight: 600;
 
           .hidden {
@@ -114,4 +112,12 @@
       }
     }
   }
+}
+
+.nav-menu ul li .active-link {
+  color: #624545;
+}
+
+.nav-menu ul li .span_color {
+  color: $white;
 }

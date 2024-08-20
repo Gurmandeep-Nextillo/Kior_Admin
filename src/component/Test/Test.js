@@ -7,6 +7,10 @@ import { getTestList } from '../../redux/getTestListSlice';
 import { addTest } from '../../redux/addTestSlice';
 import { updateTest } from '../../redux/updateTestSlice';
 import { getCategoryList } from '../../redux/getCategoryListSlice';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+
 
 const modal_setting = {
     content: {
@@ -30,6 +34,8 @@ const Test = () => {
     const [test, setTest] = useState([]);
     const [categories, setCategories] = useState([]);
     const [name, setName] = useState("");
+    const [amount, setAmount] = useState("");
+    const [from, setFrom] = useState(0)
 
     const getTestListSuccess = useSelector((state) => state.getTestListReducer.data);
     const addTestSuccess = useSelector((state) => state.addTestReducer.data);
@@ -52,23 +58,35 @@ const Test = () => {
     }, [skip]);
 
     const onSubmitClick = () => {
-        setName("")
         setOpen(false);
         if (name.length == 0) {
             alert("Please enter name!");
+        } if (amount.length == 0) {
+            alert("Please enter amount");
         } else {
-            const payload = {
-                categoryId: selectedOption,
-                name: name,
-                image: "image",
-            };
-            dispatch(addTest(payload));
+            if (from == 0) {
+                const payload = {
+                    name: name,
+                    amount: amount,
+                };
+
+                dispatch(addTest(payload));
+            }
+            else {
+                const payload = {
+                    testId: selectedOption,
+                    name: name,
+                    amount: amount,
+                };
+                dispatch(updateTest(payload))
+            }
         }
     };
 
     const toggleSwitch = (item) => {
         const payload = {
             name: item.name,
+            amount: item.amount,
             testId: item._id,
             isActive: item.isActive == 1 ? 0 : 1,
             isDeleted: item.isDeleted
@@ -77,6 +95,7 @@ const Test = () => {
     };
 
     useEffect(() => {
+        console.log("addTestSuccess  ===>", addTestSuccess)
         if (addTestSuccess != null && addTestSuccess.status == 1) {
             const paylaod = {
                 skip: skip,
@@ -89,11 +108,27 @@ const Test = () => {
     const onDeleteClick = (item) => {
         const payload = {
             name: item.name,
+            amount: item.amount,
             testId: item._id,
             isActive: 0,
             isDeleted: 1,
         }
         dispatch(updateTest(payload))
+    }
+
+    const onEditClick = (item) => {
+        setFrom(1)
+        setName(item.name);
+        setSelectedOption(item._id);
+        setAmount(item.amount);
+        setOpen(true);
+    }
+
+    const onAddClick = () => {
+        setFrom(0)
+        setName("");
+        setAmount("");
+        setOpen(true);
     }
 
     useEffect(() => {
@@ -151,7 +186,20 @@ const Test = () => {
                 <Sidebar />
                 <div className='table_categories'>
                     <div className='categories_head'>
-                        <h2>Test</h2>
+                        <div className='content_dropdown'>
+                            <h2>Test</h2>
+                            {/* <Dropdown>
+                                <DropdownButton
+                                    id="dropdown-basic-button"
+                                    className='bg-Primary'
+                                    title="Categories"
+                                >
+                                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                </DropdownButton>
+                            </Dropdown> */}
+                        </div>
                         <div className='search_categories_btn'>
                             <div class="box">
                                 <form>
@@ -160,7 +208,7 @@ const Test = () => {
                                     <span class="caret"></span>
                                 </form>
                             </div>
-                            <Button type='button' onClick={() => setOpen(true)}>Add Test</Button>
+                            <Button type='button' onClick={() => onAddClick()}>Add Test</Button>
                         </div>
                     </div>
 
@@ -169,15 +217,17 @@ const Test = () => {
                             <tr>
                                 <th>Name</th>
                                 <th>Image</th>
+                                <th>Amount</th>
                                 <th>Status</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {test.map((item, index) => (
+                            {test.length > 0 && test.map((item, index) => (
                                 <tr >
                                     <td>{item.name}</td>
                                     <td>image</td>
+                                    <td>{item.amount}</td>
                                     <td>
                                         <div className='switch_btn_center'>
                                             <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
@@ -186,7 +236,8 @@ const Test = () => {
                                         </div>
                                     </td>
                                     <td>
-                                        <Button variant="danger" onClick={() => onDeleteClick(item)}>Delete</Button>
+                                        <EditIcon onClick={() => onEditClick(item)} />
+                                        <DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
                                     </td>
                                 </tr>
                             ))}
@@ -256,6 +307,9 @@ const Test = () => {
                             </form>
                             <p style={{ marginTop: 16 }}>Test Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
+                            <p style={{ marginTop: 16 }}>Amount</p>
+                            <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
+
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>
                             </div>

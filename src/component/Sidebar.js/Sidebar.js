@@ -48,34 +48,34 @@ const Sidebar = () => {
           <nav className="nav-menu">
             <ul>
               <li>
-                <NavLink to="/dashboard">
-                  <MedicationIcon />{" "}
+                <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
+                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
                   <span>Dashboard</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/categories">
-                  <MedicationIcon />{" "}
+                <NavLink to="/categories" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
+                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
                   <span>Categories</span>
 
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/test">
-                  <MedicationIcon />{" "}
-                  <span>Testes</span>
+                <NavLink to="/test" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
+                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
+                  <span>Tests</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/Packages">
-                  <MedicationIcon />{" "}
+                <NavLink to="/Packages" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
+                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
                   <span>Packages</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink onClick={() => onLogoutClick()} >
-                  <MedicationIcon />{" "}
-                  <span>Logout</span>
+                  <MedicationIcon style={{ color: '#fff' }} />{" "}
+                  <span style={{ color: '#fff' }}>Logout</span>
                 </NavLink>
               </li>
             </ul>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import Modal from 'react-modal';
 import Sidebar from '../Sidebar.js/Sidebar';
@@ -7,6 +7,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { getCategoryList } from '../../redux/getCategoryListSlice';
 import { addCategory } from '../../redux/addCategoriesSlice';
 import { updateCategory } from '../../redux/updateCategorySlice';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 const modal_setting = {
     content: {
@@ -25,9 +27,11 @@ const Categories = () => {
 
     const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
+    const [categoryId, setCategoryID] = useState("");
     const [skip, setSkip] = useState(0)
     const [name, setName] = useState("");
     const [isOpen, setOpen] = useState(false);
+    const [from, setFrom] = useState(0)
 
     const getCategoryListSuccess = useSelector((state) => state.getCategoryListReducer.data);
     const addCategorySuccess = useSelector((state) => state.addCategoryReducer.data);
@@ -62,11 +66,21 @@ const Categories = () => {
         if (name.length == 0) {
             alert("Please enter name!");
         } else {
-            const payload = {
-                name: name,
-                image: "image",
-            };
-            dispatch(addCategory(payload));
+            if (from == 0) {
+                const payload = {
+                    name: name,
+                    image: "image",
+                };
+                dispatch(addCategory(payload));
+            }
+            else {
+                const payload = {
+                    categoryId: categoryId,
+                    name: name,
+                    image: "image",
+                };
+                dispatch(updateCategory(payload))
+            }
         }
     };
 
@@ -78,41 +92,6 @@ const Categories = () => {
             isDeleted: item.isDeleted
         }
         dispatch(updateCategory(payload))
-    };
-
-    const handleButtonClick = async () => {
-        try {
-            const options = {
-                types: [
-                    {
-                        description: 'Text Files',
-                        accept: {
-                            'text/plain': ['.txt'],
-                        },
-                    },
-                ],
-                excludeAcceptAllOption: true,
-                multiple: false,
-            };
-
-            // Show the file picker
-            const [fileHandle] = await window.showOpenFilePicker(options);
-            const file = await fileHandle.getFile();
-            alert(`Selected file: ${file.name}`);
-        } catch (err) {
-            console.error(err);
-            alert('File selection was canceled or an error occurred.');
-        }
-    };
-
-    const [scrollPosition, setScrollPosition] = useState({ scrollTop: 0, scrollLeft: 0 });
-    const tableRef = useRef(null);
-
-    const handleScroll = () => {
-        if (tableRef.current) {
-            const { scrollTop, scrollLeft } = tableRef.current;
-            setScrollPosition({ scrollTop, scrollLeft });
-        }
     };
 
     useEffect(() => {
@@ -131,9 +110,29 @@ const Categories = () => {
             isActive: 0,
             isDeleted: 1
         }
-
         dispatch(updateCategory(payload))
     }
+
+    const onEditClick = (item) => {
+        setFrom(1)
+        setCategoryID(item._id)
+        setName(item.name);
+        setOpen(true);
+    }
+
+    const onAddClick = () => {
+        setFrom(0)
+        setName("");
+        setOpen(true);
+    }
+
+    // useEffect(() => {
+    //     if (from == 0 && isOpen) {
+    //         setOpen(true);
+    //     } else if (from == 1 && isOpen) {
+    //         setOpen(true);
+    //     }
+    // }, [from])
 
     return (
         <>
@@ -150,13 +149,11 @@ const Categories = () => {
                                     <span className="caret"></span>
                                 </form>
                             </div>
-                            <Button type='button' onClick={() => setOpen(true)}>Add Categories</Button>
+                            <Button type='button' onClick={() => onAddClick()}>Add Categories</Button>
                         </div>
                     </div>
 
-                    <div id="tableContainer"
-                        ref={tableRef}
-                        onScroll={handleScroll}>
+                    <div>
                         <Table responsive bordered >
                             <thead>
                                 <tr>
@@ -179,18 +176,14 @@ const Categories = () => {
                                             </div>
                                         </td>
                                         <td>
-                                            <Button variant="danger" onClick={() => onDeleteClick(item)}>Delete</Button>
+                                            <EditIcon onClick={() => onEditClick(item)} />
+                                            <DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
                     </div>
-
-                    {/* <div className="output" style={{ marginTop: '10px' }}>
-                        {scrollPosition.scrollTop} <br />
-                        {scrollPosition.scrollLeft}
-                    </div> */}
 
                     <Modal
                         isOpen={isOpen}

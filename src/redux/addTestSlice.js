@@ -12,6 +12,7 @@ export const addTest = createAsyncThunk("addTest", async (payload) => {
             },
         };
         const url = ApiBaseUrl + addTestApi;
+        console.log(" payload  add ===>", payload)
         const response = await axios.post(url, payload, config);
         return response.data;
     } catch (error) {

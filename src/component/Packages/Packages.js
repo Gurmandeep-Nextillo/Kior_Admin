@@ -6,7 +6,9 @@ import { addPackage } from '../../redux/addPackageListSlice';
 import { updatePackage } from '../../redux/updatePackageSlice';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
-
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import { getTestList } from '../../redux/getTestListSlice';
 
 const modal_setting = {
     content: {
@@ -26,20 +28,23 @@ const Packages = () => {
     const dispatch = useDispatch();
     const [skip, setSkip] = useState(0)
     const [isOpen, setOpen] = useState(false);
-    const [test, setTest] = useState([]);
+    const [packages, setPackage] = useState([]);
     const [name, setName] = useState("");
-    const [categories, setCategories] = useState([]);
+    const [amount, setAmount] = useState("");
+    const [from, setFrom] = useState(0)
+    const [tests, setTests] = useState([])
 
     const getPackageListSuccess = useSelector((state) => state.getPackageListReducer.data);
     const addPackageSuccess = useSelector((state) => state.addPackageReducer.data);
     const updatePackageSuccess = useSelector((state) => state.updatePackageReducer.data);
 
-    const getCategoryListSuccess = useSelector((state) => state.getCategoryListReducer.data);
+    const getTestListSuccess = useSelector((state) => state.getTestListReducer.data);
+
 
     useEffect(() => {
         console.log("getPackageListSuccess ===>", getPackageListSuccess)
         if (getPackageListSuccess != null && getPackageListSuccess.status == 1) {
-            setTest(getPackageListSuccess.data);
+            setPackage(getPackageListSuccess.data);
         }
     }, [getPackageListSuccess]);
 
@@ -48,30 +53,53 @@ const Packages = () => {
             skip: skip,
         }
         dispatch(getPackageList(paylaod));
-
     }, [skip]);
 
+    useEffect(() => {
+        const paylaod = {
+            skip: 0,
+        }
+        dispatch(getTestList(paylaod));
+    }, [])
+
+    useEffect(() => {
+        if (getTestListSuccess != null && getTestListSuccess.status == 1) {
+            setTests(getTestListSuccess.data)
+        }
+    }, [getTestListSuccess])
+
+
+
     const onSubmitClick = () => {
-        setName("")
         setOpen(false);
         if (name.length == 0) {
             alert("Please enter name!");
+        } if (amount.length == 0) {
+            alert("Please enter amount");
         } else {
-            const payload = {
-                name: name,
-                image: "image",
-            };
-
-            console.log("Payload Add Test ===> ", payload)
-
-            dispatch(addPackage(payload));
+            if (from == 0) {
+                const payload = {
+                    name: name,
+                    amount: amount,
+                };
+                dispatch(addPackage(payload));
+            }
+            else {
+                const payload = {
+                    packageId: selectedOptions,
+                    name: name,
+                    amount: amount,
+                };
+                dispatch(updatePackage(payload))
+            }
         }
     };
 
     const toggleSwitch = (item) => {
         const payload = {
             name: item.name,
-            testId: item._id,
+            amount: item.amount,
+            packageId: item._id,
             isActive: item.isActive == 1 ? 0 : 1,
             isDeleted: item.isDeleted
         }
@@ -91,11 +119,27 @@ const Packages = () => {
     const onDeleteClick = (item) => {
         const payload = {
             name: item.name,
-            testId: item._id,
+            amount: item.amount,
+            packageId: item._id,
             isActive: 0,
             isDeleted: 1,
         }
         dispatch(updatePackage(payload))
+    }
+
+    const onEditClick = (item) => {
+        setFrom(1)
+        setName(item.name);
+        setSelectedOptions(item._id);
+        setAmount(item.amount);
+        setOpen(true);
+    }
+
+    const onAddClick = () => {
+        setFrom(0)
+        setName("");
+        setAmount("");
+        setOpen(true);
     }
 
     useEffect(() => {
@@ -117,20 +161,16 @@ const Packages = () => {
     useEffect(() => {
         console.log("getPackageListSuccess ===>", getPackageListSuccess)
         if (getPackageListSuccess != null && getPackageListSuccess.status == 1) {
-            setCategories(getPackageListSuccess.data);
+            setPackage(getPackageListSuccess.data);
         }
     }, [getPackageListSuccess]);
 
 
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
-    const options = [
-        { _id: 1, name: 'Category 1' },
-        { _id: 2, name: 'Category 2' },
-        { _id: 3, name: 'Category 3' },
-    ];
+    const selectedOptionsNames = selectedOptions.map(option => option.name).join(', ');
 
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
@@ -145,12 +185,9 @@ const Packages = () => {
         }
     };
 
-    const filteredOptions = options.filter((option) =>
+    const filteredOptions = tests.filter((option) =>
         option.name.toLowerCase().includes(inputValue.toLowerCase())
     );
-
-    const selectedOptionsNames = selectedOptions.map(option => option.name).join(', ');
-
 
     return (
         <>
@@ -158,7 +195,7 @@ const Packages = () => {
                 <Sidebar />
                 <div className='table_categories'>
                     <div className='categories_head'>
-                        <h2>Test</h2>
+                        <h2>Package</h2>
                         <div className='search_categories_btn'>
                             <div class="box">
                                 <form>
@@ -167,7 +204,7 @@ const Packages = () => {
                                     <span class="caret"></span>
                                 </form>
                             </div>
-                            <Button type='button' onClick={() => setOpen(true)}>Add Test</Button>
+                            <Button type='button' onClick={() => onAddClick()}>Add Package</Button>
                         </div>
                     </div>
 
@@ -175,16 +212,16 @@ const Packages = () => {
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Image</th>
+                                <th>Amount</th>
                                 <th>Status</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {test.map((item, index) => (
+                            {packages.length > 0 && packages.map((item, index) => (
                                 <tr >
                                     <td>{item.name}</td>
-                                    <td>image</td>
+                                    <td>{item.amount}</td>
                                     <td>
                                         <div className='switch_btn_center'>
                                             <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
@@ -193,7 +230,8 @@ const Packages = () => {
                                         </div>
                                     </td>
                                     <td>
-                                        <Button variant="danger" onClick={() => onDeleteClick(item)}>Delete</Button>
+                                        <EditIcon onClick={() => onEditClick(item)} />
+                                        < DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
                                     </td>
                                 </tr>
                             ))}
@@ -207,12 +245,12 @@ const Packages = () => {
                     >
                         <div className='modal_content_center'>
                             <form onSubmit={(e) => e.preventDefault()}>
-                                <label htmlFor="dropdown-input">Category</label><br />
+                                <label htmlFor="dropdown-input">Test</label><br />
                                 <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
                                     <input
                                         id="dropdown-input"
                                         type="text"
-                                        placeholder='Select Category'
+                                        placeholder='Select test'
                                         value={selectedOptionsNames}
                                         onChange={handleInputChange}
                                         style={{ width: '100%' }}
@@ -245,8 +283,8 @@ const Packages = () => {
                                                 overflowY: 'auto',
                                             }}
                                         >
-                                            {filteredOptions.length > 0 ? (
-                                                filteredOptions.map((item) => (
+                                            {tests.length > 0 ? (
+                                                tests.map((item) => (
                                                     <div>
                                                         <li
                                                             key={item._id}
@@ -273,8 +311,10 @@ const Packages = () => {
                                     )}
                                 </div>
                             </form>
-                            <p style={{ marginTop: 16 }}>Test Name</p>
+                            <p style={{ marginTop: 16 }}>Package Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
+                            <p style={{ marginTop: 16 }}>Amount</p>
+                            <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>
                             </div>
