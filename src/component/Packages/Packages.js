@@ -33,6 +33,7 @@ const Packages = () => {
     const [amount, setAmount] = useState("");
     const [from, setFrom] = useState(0)
     const [tests, setTests] = useState([])
+    const [packageId, setPackageId] = useState()
 
     const getPackageListSuccess = useSelector((state) => state.getPackageListReducer.data);
     const addPackageSuccess = useSelector((state) => state.addPackageReducer.data);
@@ -86,7 +87,7 @@ const Packages = () => {
             }
             else {
                 const payload = {
-                    packageId: selectedOptions,
+                    packageId: packageId,
                     name: name,
                     amount: amount,
                 };
@@ -130,7 +131,7 @@ const Packages = () => {
     const onEditClick = (item) => {
         setFrom(1)
         setName(item.name);
-        setSelectedOptions(item._id);
+        setPackageId(item._id);
         setAmount(item.amount);
         setOpen(true);
     }
@@ -166,7 +167,7 @@ const Packages = () => {
     }, [getPackageListSuccess]);
 
 
-    const [selectedOptions, setSelectedOptions] = useState("");
+    const [selectedOptions, setSelectedOptions] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
 

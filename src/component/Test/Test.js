@@ -9,8 +9,8 @@ import { updateTest } from '../../redux/updateTestSlice';
 import { getCategoryList } from '../../redux/getCategoryListSlice';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import down_icon from '../../assests/img/down_icon.png'
 
 const modal_setting = {
     content: {
@@ -59,9 +59,11 @@ const Test = () => {
 
     const onSubmitClick = () => {
         setOpen(false);
-        if (name.length == 0) {
+        if (selectedOptionName.length == 0) {
+            alert("Please select your Category!");
+        } else if (name.length == 0) {
             alert("Please enter name!");
-        } if (amount.length == 0) {
+        } else if (amount.length == 0) {
             alert("Please enter amount");
         } else {
             if (from == 0) {
@@ -180,6 +182,12 @@ const Test = () => {
         item.name.toLowerCase().includes(selectedOption.toLowerCase())
     );
 
+    const [selected, setSelected] = useState('Aaaaa');
+
+    const handleSelect = (eventKey) => {
+        setSelected(eventKey);
+    };
+
     return (
         <>
             <div className="dashboard">
@@ -188,17 +196,24 @@ const Test = () => {
                     <div className='categories_head'>
                         <div className='content_dropdown'>
                             <h2>Test</h2>
-                            {/* <Dropdown>
-                                <DropdownButton
-                                    id="dropdown-basic-button"
-                                    className='bg-Primary'
-                                    title="Categories"
-                                >
-                                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                                </DropdownButton>
-                            </Dropdown> */}
+                            <div className="user-data">
+                                <Dropdown onSelect={handleSelect}>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic" className="custom-dropdown-toggle">
+                                        {selected}<img src={down_icon} alt='down_icon' />
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item eventKey="Aaaaa">
+                                            Aaaaa
+                                        </Dropdown.Item>
+                                        <Dropdown.Item eventKey="Bbbbb">
+                                            Bbbbb
+                                        </Dropdown.Item>
+                                        <Dropdown.Item eventKey="Ccccc">
+                                            Ccccc
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
                         </div>
                         <div className='search_categories_btn'>
                             <div class="box">
