@@ -10,6 +10,19 @@
 
             .content_dropdown {
                 @include display(center, center);
+
+                .selected_otion {
+                    margin-left: 10px;
+
+                    select {
+                        padding: 5px 12px;
+                        border: 1px solid $border_color;
+                        outline: none;
+                        border-radius: 4px;
+                        font-size: 15px;
+                        letter-spacing: .3px;
+                    }
+                }
             }
 
             .search_categories_btn {
@@ -168,6 +181,12 @@
                 }
             }
 
+            .tabel_head {
+                th {
+                    width: 16% !important;
+                }
+            }
+
             tbody {
 
                 td {
@@ -272,6 +291,20 @@
                     }
                 }
 
+                .selected_otion {
+
+                    select {
+                        padding: 8px 10px;
+                        border: 1px solid $border_color;
+                        outline: none;
+                        border-radius: 4px;
+                        font-size: 15px;
+                        letter-spacing: .3px;
+                        width: 100%;
+                        margin-top: 12px;
+                    }
+                }
+
                 .submit_btn {
                     @include display(Center, center);
 
@@ -314,41 +347,6 @@
                     }
                 }
             }
-        }
-    }
-}
-
-.dropdown-toggle {
-    background-color: transparent;
-    padding: 0;
-}
-
-.dropdown {
-    position: relative;
-
-    .custom-dropdown-toggle {
-        background-color: $white !important;
-        color: $black !important;
-        padding: 7px 15px !important;
-        margin-left: 20px !important;
-
-        img {
-            width: 20px;
-            margin-left: 10px;
-        }
-    }
-
-    .dropdown-menu {
-        transform: translate3d(18px, 32px, 0px) !important;
-        display: flex;
-        background-color: rgba(250, 250, 250, 0.9882352941);
-        padding: 10px;
-        flex-direction: column;
-        box-shadow: 1px 1px 6px #d0c3c3;
-
-        .dropdown-item {
-            padding: 4px 10px;
-            color: #000;
         }
     }
 }

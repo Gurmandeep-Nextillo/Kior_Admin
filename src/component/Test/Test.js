@@ -36,6 +36,7 @@ const Test = () => {
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
     const [from, setFrom] = useState(0)
+    const [testId, setTestId] = useState()
 
     const getTestListSuccess = useSelector((state) => state.getTestListReducer.data);
     const addTestSuccess = useSelector((state) => state.addTestReducer.data);
@@ -76,7 +77,7 @@ const Test = () => {
             }
             else {
                 const payload = {
-                    testId: selectedOption,
+                    testId: testId,
                     name: name,
                     amount: amount,
                 };
@@ -121,7 +122,7 @@ const Test = () => {
     const onEditClick = (item) => {
         setFrom(1)
         setName(item.name);
-        setSelectedOption(item._id);
+        setTestId(item._id);
         setAmount(item.amount);
         setOpen(true);
     }
@@ -182,10 +183,11 @@ const Test = () => {
         item.name.toLowerCase().includes(selectedOption.toLowerCase())
     );
 
+
     const [selected, setSelected] = useState('Aaaaa');
 
-    const handleSelect = (eventKey) => {
-        setSelected(eventKey);
+    const handleSelect = (event) => {
+        setSelected(event.target.value);
     };
 
     return (
@@ -196,23 +198,12 @@ const Test = () => {
                     <div className='categories_head'>
                         <div className='content_dropdown'>
                             <h2>Test</h2>
-                            <div className="user-data">
-                                <Dropdown onSelect={handleSelect}>
-                                    <Dropdown.Toggle variant="success" id="dropdown-basic" className="custom-dropdown-toggle">
-                                        {selected}<img src={down_icon} alt='down_icon' />
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item eventKey="Aaaaa">
-                                            Aaaaa
-                                        </Dropdown.Item>
-                                        <Dropdown.Item eventKey="Bbbbb">
-                                            Bbbbb
-                                        </Dropdown.Item>
-                                        <Dropdown.Item eventKey="Ccccc">
-                                            Ccccc
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                            <div className="selected_otion">
+                                <select value={selected} onChange={handleSelect} className="custom-dropdown-toggle">
+                                    <option value="Aaaaa">Aaaaa</option>
+                                    <option value="Bbbbb">Bbbbb</option>
+                                    <option value="Ccccc">Ccccc</option>
+                                </select>
                             </div>
                         </div>
                         <div className='search_categories_btn'>
@@ -231,31 +222,30 @@ const Test = () => {
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Image</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {test.length > 0 && test.map((item, index) => (
-                                <tr >
-                                    <td>{item.name}</td>
-                                    <td>image</td>
-                                    <td>{item.amount}</td>
-                                    <td>
-                                        <div className='switch_btn_center'>
-                                            <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
-                                                <div className="toggle"></div>
+                            {test.length > 0 &&
+                                test.map((item) => (
+                                    <tr >
+                                        <td>{item.name}</td>
+                                        <td>{item.amount}</td>
+                                        <td>
+                                            <div className='switch_btn_center'>
+                                                <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
+                                                    <div className="toggle"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <EditIcon onClick={() => onEditClick(item)} />
-                                        <DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
-                                    </td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td>
+                                            <EditIcon onClick={() => onEditClick(item)} />
+                                            <DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
+                                        </td>
+                                    </tr>
+                                ))}
                         </tbody>
                     </Table>
 

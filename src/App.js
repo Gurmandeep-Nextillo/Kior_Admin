@@ -8,6 +8,8 @@ import store from './redux/store';
 import { Provider } from 'react-redux';
 import Categories from './component/Categories/Categories';
 import Packages from './component/Packages/Packages';
+import Patient from './component/Patient/Patient';
+import Doctor from './component/Doctor/Doctor';
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
             <Route path="/test" element={<Test />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/packages" element={<Packages />} />
+            <Route path="/patient" element={<Patient />} />
+            <Route path="/doctor" element={<Doctor />} />
           </Routes>
         </Router>
       </Provider>,
