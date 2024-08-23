@@ -10,6 +10,7 @@ import updateTestReducer from "./updateTestSlice";
 import getPackageListReducer from "./getPackageListSlice";
 import addPackageReducer from "./addPackageListSlice";
 import updatePackageReducer from "./updatePackageSlice";
+import uploadFileReducer from "./uploadFileSlice";
 
 const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
         getPackageListReducer: getPackageListReducer,
         addPackageReducer: addPackageReducer,
         updatePackageReducer: updatePackageReducer,
+        uploadFileReducer: uploadFileReducer,
     },
 });
 

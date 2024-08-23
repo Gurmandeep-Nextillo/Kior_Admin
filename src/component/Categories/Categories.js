@@ -9,6 +9,7 @@ import { addCategory } from '../../redux/addCategoriesSlice';
 import { updateCategory } from '../../redux/updateCategorySlice';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import { uploadFile } from '../../redux/uploadFileSlice';
 
 const modal_setting = {
     content: {
@@ -32,10 +33,15 @@ const Categories = () => {
     const [name, setName] = useState("");
     const [isOpen, setOpen] = useState(false);
     const [from, setFrom] = useState(0)
+    const [image, setImage] = useState(null)
+    const [imageSrc, setImageSrc] = useState(null);
+    const [imageLocation, setImageLocation] = useState("");
 
     const getCategoryListSuccess = useSelector((state) => state.getCategoryListReducer.data);
     const addCategorySuccess = useSelector((state) => state.addCategoryReducer.data);
     const updateCategorySuccess = useSelector((state) => state.updateCategoryReducer.data);
+    const uploadFileResponse = useSelector((state) => state.uploadFileReducer.data);
+
 
     useEffect(() => {
         if (getCategoryListSuccess != null && getCategoryListSuccess.status == 1) {
@@ -61,23 +67,33 @@ const Categories = () => {
     }, [addCategorySuccess]);
 
     const onSubmitClick = () => {
-        setName("")
         setOpen(false);
-        if (name.length == 0) {
-            alert("Please enter name!");
-        } else {
-            if (from == 0) {
-                const payload = {
-                    name: name,
-                    image: "image",
-                };
-                dispatch(addCategory(payload));
+        if (from == 0) {
+            if (image != null) {
+                if (name.length == 0) {
+                    alert("Please enter name!");
+                } else {
+                    dispatch(uploadFile(image));
+                }
+            }
+            else {
+                alert("Please Select Image First")
+            }
+        }
+        else {
+
+            if (image != null) {
+                if (name.length == 0) {
+                    alert("Please enter name!");
+                } else {
+                    dispatch(uploadFile(image));
+                }
             }
             else {
                 const payload = {
                     categoryId: categoryId,
                     name: name,
-                    image: "image",
+                    image: imageLocation,
                 };
                 dispatch(updateCategory(payload))
             }
@@ -96,6 +112,8 @@ const Categories = () => {
 
     useEffect(() => {
         if (updateCategorySuccess != null && updateCategorySuccess.status == 1) {
+            setImageLocation("")
+            setName("")
             const paylaod = {
                 skip: 0,
             }
@@ -114,25 +132,56 @@ const Categories = () => {
     }
 
     const onEditClick = (item) => {
+        setImageSrc(null)
         setFrom(1)
         setCategoryID(item._id)
-        setName(item.name);
-        setOpen(true);
+        setName(item.name)
+        setImageLocation(item.image)
+        setImage(null)
+        setOpen(true)
     }
 
     const onAddClick = () => {
         setFrom(0)
         setName("");
+        setImageSrc(null)
+        setImage(null)
+        setImageLocation("")
         setOpen(true);
     }
 
-    // useEffect(() => {
-    //     if (from == 0 && isOpen) {
-    //         setOpen(true);
-    //     } else if (from == 1 && isOpen) {
-    //         setOpen(true);
-    //     }
-    // }, [from])
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImageSrc(reader.result);
+                setImageLocation("")
+            };
+            reader.readAsDataURL(file);
+            setImage(file)
+        }
+    };
+
+    useEffect(() => {
+        if (uploadFileResponse != null && uploadFileResponse.Location != "") {
+            if (from == 0) {
+                const payload = {
+                    name: name,
+                    image: uploadFileResponse.Location,
+                };
+                dispatch(addCategory(payload));
+            }
+            else {
+                const payload = {
+                    categoryId: categoryId,
+                    name: name,
+                    image: uploadFileResponse.Location,
+                };
+                dispatch(updateCategory(payload))
+            }
+        }
+    }, [uploadFileResponse])
 
     return (
         <>
@@ -164,10 +213,10 @@ const Categories = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {categories.length > 0 && categories.map((item, index) => (
+                                {categories.length > 0 && categories.map((item) => (
                                     <tr>
                                         <td>{item.name}</td>
-                                        <td>image</td>
+                                        <td>{item.image != "image" && <img src={item.image} alt="Uploaded" style={{ maxWidth: '100%' }} />}</td>
                                         <td>
                                             <div className='switch_btn_center'>
                                                 <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
@@ -191,13 +240,14 @@ const Categories = () => {
                         onRequestClose={() => setOpen(false)}
                     >
                         <div className='modal_content_center'>
-                            <p>Category Image</p>
-                            <div className="add_picture"
-                            // onClick={handleButtonClick}
-                            >
-                                <AddIcon />
+                            <p>Image</p>
+                            <div className="add_picture">
+                                <input type="file" onChange={handleFileChange} className='file_upload' id='fileInput' />
+                                <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
+                                    {(imageSrc || imageLocation != "") ? <img src={imageSrc != null ? imageSrc : imageLocation} alt="Uploaded" style={{ maxWidth: '100%' }} /> : <AddIcon />}
+                                </label>
                             </div>
-                            <p>Category Name</p>
+                            <p>Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>

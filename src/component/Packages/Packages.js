@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import { getTestList } from '../../redux/getTestListSlice';
+import AddIcon from '@mui/icons-material/Add';
+import { uploadFile } from '../../redux/uploadFileSlice';
 
 const modal_setting = {
     content: {
@@ -34,12 +36,15 @@ const Packages = () => {
     const [from, setFrom] = useState(0)
     const [tests, setTests] = useState([])
     const [packageId, setPackageId] = useState()
+    const [image, setImage] = useState(null)
+    const [imageSrc, setImageSrc] = useState(null);
+    const [imageLocation, setImageLocation] = useState("");
 
     const getPackageListSuccess = useSelector((state) => state.getPackageListReducer.data);
     const addPackageSuccess = useSelector((state) => state.addPackageReducer.data);
     const updatePackageSuccess = useSelector((state) => state.updatePackageReducer.data);
-
     const getTestListSuccess = useSelector((state) => state.getTestListReducer.data);
+    const uploadFileResponse = useSelector((state) => state.uploadFileReducer.data);
 
 
     useEffect(() => {
@@ -73,23 +78,36 @@ const Packages = () => {
 
     const onSubmitClick = () => {
         setOpen(false);
-        if (name.length == 0) {
-            alert("Please enter name!");
-        } if (amount.length == 0) {
-            alert("Please enter amount");
+        if (from == 0) {
+            if (image != null) {
+                if (name.length == 0) {
+                    alert("Please enter name!");
+                } if (amount.length == 0) {
+                    alert("Please enter amount");
+                } else {
+                    dispatch(uploadFile(image));
+                }
+            }
+            else {
+                alert("Please Select Image First")
+            }
         } else {
-            if (from == 0) {
-                const payload = {
-                    name: name,
-                    amount: amount,
-                };
-                dispatch(addPackage(payload));
+
+            if (image != null) {
+                if (name.length == 0) {
+                    alert("Please enter name!");
+                } if (amount.length == 0) {
+                    alert("Please enter amount");
+                } else {
+                    dispatch(uploadFile(image));
+                }
             }
             else {
                 const payload = {
                     packageId: packageId,
                     name: name,
                     amount: amount,
+                    image: imageLocation,
                 };
                 dispatch(updatePackage(payload))
             }
@@ -130,21 +148,29 @@ const Packages = () => {
 
     const onEditClick = (item) => {
         setFrom(1)
-        setName(item.name);
-        setPackageId(item._id);
-        setAmount(item.amount);
-        setOpen(true);
+        setName(item.name)
+        setPackageId(item._id)
+        setImageLocation(item.image)
+        setAmount(item.amount)
+        setOpen(true)
+        setImageSrc(null)
+        setImage(null)
     }
 
     const onAddClick = () => {
         setFrom(0)
-        setName("");
-        setAmount("");
-        setOpen(true);
+        setName("")
+        setImageLocation("")
+        setImageSrc(null)
+        setImage(null)
+        setAmount("")
+        setOpen(true)
     }
 
     useEffect(() => {
         if (updatePackageSuccess != null && updatePackageSuccess.status == 1) {
+            setImageLocation("")
+            setName("")
             const paylaod = {
                 skip: 0,
             }
@@ -186,9 +212,41 @@ const Packages = () => {
         }
     };
 
-    const filteredOptions = tests.filter((option) =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-    );
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImageSrc(reader.result);
+                setImageLocation("")
+            };
+            reader.readAsDataURL(file);
+
+            setImage(file)
+        }
+    };
+
+    useEffect(() => {
+        if (uploadFileResponse != null && uploadFileResponse.Location != "") {
+            if (from == 0) {
+                const payload = {
+                    name: name,
+                    amount: amount,
+                    image: uploadFileResponse.Location,
+                };
+                dispatch(addPackage(payload));
+            }
+            else {
+                const payload = {
+                    packageId: packageId,
+                    name: name,
+                    amount: amount,
+                    image: uploadFileResponse.Location,
+                };
+                dispatch(updatePackage(payload));
+            }
+        }
+    }, [uploadFileResponse])
 
     return (
         <>
@@ -213,15 +271,17 @@ const Packages = () => {
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Image</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {packages.length > 0 && packages.map((item, index) => (
+                            {packages.length > 0 && packages.map((item) => (
                                 <tr >
                                     <td>{item.name}</td>
+                                    <td>{item.image != "image" && <img src={item.image} alt="Uploaded" style={{ maxWidth: '100%' }} />}</td>
                                     <td>{item.amount}</td>
                                     <td>
                                         <div className='switch_btn_center'>
@@ -245,6 +305,13 @@ const Packages = () => {
                         onRequestClose={() => setOpen(false)}
                     >
                         <div className='modal_content_center'>
+                            <p>Image</p>
+                            <div className="add_picture">
+                                <input type="file" onChange={handleFileChange} className='file_upload' id='fileInput' />
+                                <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
+                                    {(imageSrc || imageLocation != "") ? <img src={imageSrc != null ? imageSrc : imageLocation} alt="Uploaded" style={{ maxWidth: '100%' }} /> : <AddIcon />}
+                                </label>
+                            </div>
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <label htmlFor="dropdown-input">Test</label><br />
                                 <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
@@ -312,7 +379,7 @@ const Packages = () => {
                                     )}
                                 </div>
                             </form>
-                            <p style={{ marginTop: 16 }}>Package Name</p>
+                            <p style={{ marginTop: 16 }}>Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                             <p style={{ marginTop: 16 }}>Amount</p>
                             <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />

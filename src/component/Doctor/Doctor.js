@@ -33,7 +33,7 @@ const Doctor = () => {
                 <div className='table_categories'>
                     <div className='categories_head'>
                         <div className='content_dropdown'>
-                            <h2>Patient</h2>
+                            <h2>Doctor</h2>
                         </div>
                         <div className='search_categories_btn'>
                             <div class="box">

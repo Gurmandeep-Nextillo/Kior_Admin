@@ -254,6 +254,7 @@
         .ReactModal__Content {
             height: fit-content;
             padding: 25px 20px !important;
+            box-shadow: 0 -4px 50px 0 rgba(11, 20, 26, 0.19), 0 5px 9px 0 rgba(11, 20, 26, 0.24);
 
             .modal_content_center {
                 p {
@@ -264,14 +265,63 @@
 
                 .add_picture {
                     margin: 12px 0;
+                    position: relative;
+
+                    .file_upload {
+                        width: 80px;
+                        height: 80px;
+                        margin: 0;
+                        position: absolute;
+                        left: 0;
+                        opacity: 0;
+                        cursor: pointer;
+                    }
 
                     svg {
+
                         background-color: $white;
                         border: 1px solid $border_color;
                         border-radius: 6px;
-                        font-size: 72px;
+                        font-size: 80px;
                         padding: 20px;
                         cursor: pointer;
+                    }
+
+                    img {
+                        width: 80px;
+                        height: 80px;
+                        background-color: $white;
+                        background-color: $white;
+                        border: 1px solid $border_color;
+                        border-radius: 6px;
+                        position: absolute;
+                        left: 0;
+                        margin-top: 0;
+                    }
+
+                    label {
+
+                        svg {
+
+                            background-color: $white;
+                            border: 1px solid $border_color;
+                            border-radius: 6px;
+                            font-size: 80px;
+                            padding: 20px;
+                            cursor: pointer;
+                        }
+
+                        img {
+                            width: 80px;
+                            height: 80px;
+                            background-color: $white;
+                            background-color: $white;
+                            border: 1px solid $border_color;
+                            border-radius: 6px;
+                            position: absolute;
+                            left: 0;
+                            margin-top: 0;
+                        }
                     }
                 }
 

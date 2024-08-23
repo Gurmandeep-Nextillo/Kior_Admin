@@ -9,8 +9,6 @@ import { updateTest } from '../../redux/updateTestSlice';
 import { getCategoryList } from '../../redux/getCategoryListSlice';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
-import Dropdown from 'react-bootstrap/Dropdown';
-import down_icon from '../../assests/img/down_icon.png'
 
 const modal_setting = {
     content: {
