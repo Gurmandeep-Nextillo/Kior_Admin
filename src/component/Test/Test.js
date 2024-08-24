@@ -69,6 +69,7 @@ const Test = () => {
                 const payload = {
                     name: name,
                     amount: amount,
+                    categoryId: selectedOption
                 };
 
                 dispatch(addTest(payload));
@@ -166,7 +167,7 @@ const Test = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleInputChange = (event) => {
-        setSelectedOption(event.target.value);
+        // setSelectedOption(event.target.value);
         setSelectedOptionName(event.target.value);
         setIsDropdownOpen(true);
     };
@@ -178,7 +179,7 @@ const Test = () => {
     };
 
     const filteredOptions = getCategoryListSuccess?.data.filter(item =>
-        item.name.toLowerCase().includes(selectedOption.toLowerCase())
+        item.name.toLowerCase().includes(selectedOptionName.toLowerCase())
     );
 
 
@@ -308,7 +309,7 @@ const Test = () => {
                                     )}
                                 </div>
                             </form>
-                            <p style={{ marginTop: 16 }}>Test Name</p>
+                            <p style={{ marginTop: 16 }}>Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                             <p style={{ marginTop: 16 }}>Amount</p>
                             <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />

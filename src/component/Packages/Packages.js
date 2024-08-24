@@ -311,6 +311,7 @@ const Packages = () => {
                                 <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
                                     {(imageSrc || imageLocation != "") ? <img src={imageSrc != null ? imageSrc : imageLocation} alt="Uploaded" style={{ maxWidth: '100%' }} /> : <AddIcon />}
                                 </label>
+                                <AddIcon />
                             </div>
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <label htmlFor="dropdown-input">Test</label><br />

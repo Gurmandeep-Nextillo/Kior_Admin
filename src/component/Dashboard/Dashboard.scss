@@ -3,7 +3,7 @@
     height: 100vh;
 
     .dashboard_card {
-        @include display(space-between, center);
+        @include display(flex-start, center);
         gap: 30px;
         margin-bottom: 30px;
 
@@ -11,7 +11,7 @@
             border: 1px solid $border_color;
             padding: 22px;
             border-radius: 6px;
-            width: 100%;
+            width: 30%;
             background: $background_linear;
 
             @media($breakpoint_XL) {

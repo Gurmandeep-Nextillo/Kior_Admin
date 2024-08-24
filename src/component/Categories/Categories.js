@@ -246,8 +246,9 @@ const Categories = () => {
                                 <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
                                     {(imageSrc || imageLocation != "") ? <img src={imageSrc != null ? imageSrc : imageLocation} alt="Uploaded" style={{ maxWidth: '100%' }} /> : <AddIcon />}
                                 </label>
+                                <AddIcon />
                             </div>
-                            <p>Name</p>
+                            <p >Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>

@@ -100,7 +100,7 @@ const Patient = () => {
                                 <input type='text' placeholder='Phone Number' autoComplete='off' /><br />
 
                                 <p style={{ marginTop: 16 }}>Address</p>
-                                <input type='number' placeholder='Address' autoComplete='off' /><br />
+                                <input type='text' placeholder='Address' autoComplete='off' /><br />
 
                                 <p style={{ marginTop: 16 }}>Doctors</p>
                                 <div className="selected_otion">
