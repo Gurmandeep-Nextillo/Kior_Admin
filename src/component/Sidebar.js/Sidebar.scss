@@ -100,6 +100,21 @@
           height: 30px;
         }
 
+        img {
+          width: 28px;
+          height: 28px;
+          margin-left: 5px;
+        }
+
+        .active-link-img {
+          color: #624545;
+          filter: opacity(0.5);
+        }
+
+        .span_color-img {
+          filter: invert(1);
+        }
+
         span {
           margin-left: 10px;
           transition: opacity 0.3s;

@@ -255,59 +255,63 @@ const Test = () => {
                     >
                         <div className='modal_content_center'>
                             <form onSubmit={handleSubmit}>
-                                <label htmlFor="dropdown-input">Category</label><br />
-                                <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
-                                    <input
-                                        id="dropdown-input"
-                                        type="text"
-                                        placeholder='Select Category'
-                                        value={selectedOptionName}
-                                        onChange={handleInputChange}
-                                        style={{ width: '100%' }}
-                                    />
-                                    <Button
-                                        type="button"
-                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        style={{
-                                            marginLeft: '5px',
-                                            position: 'absolute',
-                                            right: 15,
-                                            top: 20
-                                        }}
-                                    >
-                                        ▼
-                                    </Button>
-                                    {isDropdownOpen && (
-                                        <ul
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 1,
-                                                backgroundColor: 'white',
-                                                border: '1px solid #ccc',
-                                                listStyleType: 'none',
-                                                margin: 0,
-                                                padding: '5px',
-                                                width: '100%',
-                                                maxHeight: '150px',
-                                                overflowY: 'auto',
-                                            }}
-                                        >
-                                            {filteredOptions.length > 0 ? (
-                                                filteredOptions.map((item) => (
-                                                    <li
-                                                        key={item._id}
-                                                        onClick={() => handleSelectChange(item)}
-                                                        style={{ padding: '5px', cursor: 'pointer' }}
-                                                    >
-                                                        {item.name}
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li style={{ padding: '5px' }}>No results found</li>
+                                {from ? "" :
+                                    <div>
+                                        <label htmlFor="dropdown-input">Category</label><br />
+                                        <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                                            <input
+                                                id="dropdown-input"
+                                                type="text"
+                                                placeholder='Select Category'
+                                                value={selectedOptionName}
+                                                onChange={handleInputChange}
+                                                style={{ width: '100%' }}
+                                            />
+                                            <Button
+                                                type="button"
+                                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                                style={{
+                                                    marginLeft: '5px',
+                                                    position: 'absolute',
+                                                    right: 15,
+                                                    top: 20
+                                                }}
+                                            >
+                                                ▼
+                                            </Button>
+                                            {isDropdownOpen && (
+                                                <ul
+                                                    style={{
+                                                        position: 'absolute',
+                                                        zIndex: 1,
+                                                        backgroundColor: 'white',
+                                                        border: '1px solid #ccc',
+                                                        listStyleType: 'none',
+                                                        margin: 0,
+                                                        padding: '5px',
+                                                        width: '100%',
+                                                        maxHeight: '150px',
+                                                        overflowY: 'auto',
+                                                    }}
+                                                >
+                                                    {filteredOptions.length > 0 ? (
+                                                        filteredOptions.map((item) => (
+                                                            <li
+                                                                key={item._id}
+                                                                onClick={() => handleSelectChange(item)}
+                                                                style={{ padding: '5px', cursor: 'pointer' }}
+                                                            >
+                                                                {item.name}
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li style={{ padding: '5px' }}>No results found</li>
+                                                    )}
+                                                </ul>
                                             )}
-                                        </ul>
-                                    )}
-                                </div>
+                                        </div>
+                                    </div>
+                                }
                             </form>
                             <p style={{ marginTop: 16 }}>Name</p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />

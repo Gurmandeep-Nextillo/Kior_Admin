@@ -7,6 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearlogoutData, logout } from "../../redux/logoutSlice";
 import GridViewIcon from '@mui/icons-material/GridView';
 import CategoryIcon from '@mui/icons-material/Category';
+import LogoutIcon from '@mui/icons-material/Logout';
+import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import MedicationOutlinedIcon from '@mui/icons-material/MedicationOutlined';
+import test_img from '../../assests/img/test_img.png'
+import patient_icon from '../../assests/img/patient_icon.png'
 
 const Sidebar = () => {
 
@@ -59,36 +64,43 @@ const Sidebar = () => {
                 <NavLink to="/categories" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
                   <CategoryIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
                   <span>Categories</span>
-
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/test" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
-                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
-                  <span>Tests</span>
+                  {({ isActive }) => (
+                    <>
+                      <img src={test_img} alt="test_img" className={isActive ? 'active-link-img' : 'span_color-img'} />{" "}
+                      <span>Tests</span>
+                    </>
+                  )}
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/packages" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
-                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
+                  <InventoryOutlinedIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
                   <span>Packages</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/patient" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
-                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
-                  <span>Patient</span>
+                  {({ isActive }) => (
+                    <>
+                      <img src={patient_icon} alt="patient_icon" className={isActive ? 'active-link-img' : 'span_color-img'} />{" "}
+                      <span>Patient</span>
+                    </>
+                  )}
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/doctor" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
-                  <MedicationIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
+                  <MedicationOutlinedIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
                   <span>Doctor</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink onClick={() => onLogoutClick()} >
-                  <MedicationIcon style={{ color: '#fff' }} />{" "}
+                  <LogoutIcon style={{ color: '#fff' }} />{" "}
                   <span style={{ color: '#fff' }}>Logout</span>
                 </NavLink>
               </li>

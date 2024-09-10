@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { getTestList } from '../../redux/getTestListSlice';
 import AddIcon from '@mui/icons-material/Add';
 import { uploadFile } from '../../redux/uploadFileSlice';
+import { VisibilityTwoTone, VisibilityOffTwoTone } from "@mui/icons-material";
 
 const modal_setting = {
     content: {
@@ -30,6 +31,7 @@ const Packages = () => {
     const dispatch = useDispatch();
     const [skip, setSkip] = useState(0)
     const [isOpen, setOpen] = useState(false);
+    const [isOpenTest, setOpenTest] = useState(false);
     const [packages, setPackage] = useState([]);
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
@@ -39,6 +41,7 @@ const Packages = () => {
     const [image, setImage] = useState(null)
     const [imageSrc, setImageSrc] = useState(null);
     const [imageLocation, setImageLocation] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const getPackageListSuccess = useSelector((state) => state.getPackageListReducer.data);
     const addPackageSuccess = useSelector((state) => state.addPackageReducer.data);
@@ -195,6 +198,7 @@ const Packages = () => {
 
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [disabled, setDisabled] = useState(true);
     const [inputValue, setInputValue] = useState('');
 
     const selectedOptionsNames = selectedOptions.map(option => option.name).join(', ');
@@ -233,6 +237,7 @@ const Packages = () => {
                     name: name,
                     amount: amount,
                     image: uploadFileResponse.Location,
+                    testIds: selectedOptions
                 };
                 dispatch(addPackage(payload));
             }
@@ -242,6 +247,7 @@ const Packages = () => {
                     name: name,
                     amount: amount,
                     image: uploadFileResponse.Location,
+
                 };
                 dispatch(updatePackage(payload));
             }
@@ -293,6 +299,20 @@ const Packages = () => {
                                     <td>
                                         <EditIcon onClick={() => onEditClick(item)} />
                                         < DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
+                                        <Button
+                                            type="button"
+                                            className="passwod_btn"
+                                            onClick={() => {
+                                                setShowPassword(!showPassword);
+                                                setOpenTest(true)
+                                            }}
+                                        >
+                                            {isOpenTest ? (
+                                                <VisibilityTwoTone />
+                                            ) : (
+                                                <VisibilityOffTwoTone />
+                                            )}
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}
@@ -315,7 +335,7 @@ const Packages = () => {
                             </div>
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <label htmlFor="dropdown-input">Test</label><br />
-                                <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                                <div style={{ position: 'relative', display: 'inline-block', width: '100%' }} >
                                     <input
                                         id="dropdown-input"
                                         type="text"
@@ -386,6 +406,28 @@ const Packages = () => {
                             <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>
+                            </div>
+                        </div>
+                    </Modal>
+
+                    <Modal
+                        isOpen={isOpenTest}
+                        style={modal_setting}
+                        onRequestClose={() => setOpenTest(false)}
+                    >
+                        <div className='modal_content_center package_modal'>
+                            {tests.length > 0 &&
+                                tests.map((item) => (
+                                    <tr>
+                                        <td style={{ paddingBottom: 10 }}>{item.name}</td>
+                                        <td style={{ paddingBottom: 10 }}>{item.amount}</td>
+
+                                    </tr>
+                                ))}
+                            <div className='close_btn_modal'>
+                                <button onClick={() => { setShowPassword(false); setOpenTest(false) }} style={{ marginTop: '20px' }}>
+                                    Close
+                                </button>
                             </div>
                         </div>
                     </Modal>

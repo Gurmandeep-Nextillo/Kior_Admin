@@ -239,6 +239,18 @@
                         height: 30px;
                         cursor: pointer;
                     }
+
+                    .passwod_btn {
+                        background-color: transparent;
+                        padding: 0 15px;
+                        border: none;
+                        box-shadow: none;
+                        outline: none;
+
+                        svg {
+                            color: $black;
+                        }
+                    }
                 }
             }
         }
@@ -253,7 +265,7 @@
 
         .ReactModal__Content {
             height: fit-content;
-            padding: 25px 20px !important;
+            padding: 25px 20px 50px !important;
             box-shadow: 0 -4px 50px 0 rgba(11, 20, 26, 0.19), 0 5px 9px 0 rgba(11, 20, 26, 0.24);
 
             .modal_content_center {
@@ -385,16 +397,50 @@
 
                     .button_div {
                         @include display(center, center);
+                        border-top: 1px solid $border_color;
 
                         .button_ok {
                             background-color: $black;
                             padding: 8px 14px;
                             color: $white;
-                            font-weight: '600';
+                            font-weight: 600;
                             border: 1px solid $black;
                             border-radius: 4px;
                             margin: 10px 0;
                         }
+                    }
+                }
+            }
+
+            .package_modal {
+                max-height: 430px;
+                overflow-y: scroll;
+
+                tr {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    border: 1px solid $border_color;
+                    border-radius: 6px;
+
+                    td {}
+                }
+
+                .close_btn_modal {
+                    @include display(center, center);
+                    position: fixed;
+                    bottom: 7px;
+                    left: 40%;
+
+                    button {
+                        background-color: $black;
+                        border: 1px solid $black;
+                        border-radius: 6px;
+                        padding: 9px 20px;
+                        color: $white;
+                        font-weight: 600;
+                        cursor: pointer;
                     }
                 }
             }

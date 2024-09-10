@@ -11,6 +11,7 @@ import getPackageListReducer from "./getPackageListSlice";
 import addPackageReducer from "./addPackageListSlice";
 import updatePackageReducer from "./updatePackageSlice";
 import uploadFileReducer from "./uploadFileSlice";
+import getPackageDetailReducer from "./getPackageDetailSlice";
 
 const store = configureStore({
     reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
         addPackageReducer: addPackageReducer,
         updatePackageReducer: updatePackageReducer,
         uploadFileReducer: uploadFileReducer,
+        getPackageDetailReducer: getPackageDetailReducer,
     },
 });
 
