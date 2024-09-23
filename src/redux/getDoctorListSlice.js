@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getPackageDetailApi } from "../utils/constants";
+import { ApiBaseUrl, getDoctorListApi } from "../utils/constants";
 
-export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payload) => {
+export const getDoctorList = createAsyncThunk("getDoctorList", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,39 +11,41 @@ export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payl
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + getPackageDetailApi;
-        const response = await axios.get(url, payload, config);
+        const skip = payload.skip
+        const url = `${ApiBaseUrl}${getDoctorListApi}?skip=${skip}&limit=20`;
+        const response = await axios.get(url, config);
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getPackageDetailSlice = createSlice({
-    name: "getPackageDetailReducer",
+const getDoctorListSlice = createSlice({
+    name: "getDoctorListReducer",
+
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetPackageDetail: (state) => {
+        clearGetDoctorListData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getPackageDetail.pending, (state) => {
+            .addCase(getDoctorList.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getPackageDetail.fulfilled, (state, action) => {
+            .addCase(getDoctorList.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getPackageDetail.rejected, (state) => {
+            .addCase(getDoctorList.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetPackageDetail } = getPackageDetailSlice.actions;
-export default getPackageDetailSlice.reducer;
+export const { clearGetDoctorListData } = getDoctorListSlice.actions;
+export default getDoctorListSlice.reducer;

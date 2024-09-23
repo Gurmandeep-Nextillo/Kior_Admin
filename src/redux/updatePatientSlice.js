@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getPackageDetailApi } from "../utils/constants";
+import { ApiBaseUrl, updatePatientApi } from "../utils/constants";
 
-export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payload) => {
+export const updatePatient = createAsyncThunk("updatePatient", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,39 +11,41 @@ export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payl
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + getPackageDetailApi;
-        const response = await axios.get(url, payload, config);
+        const url = ApiBaseUrl + updatePatientApi;
+        console.log("url ==>", url, payload)
+        const response = await axios.put(url, payload, config);
+        console.log("response.data ==>", response.data)
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getPackageDetailSlice = createSlice({
-    name: "getPackageDetailReducer",
+const updatePatientSlice = createSlice({
+    name: "updatePatientReducer",
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetPackageDetail: (state) => {
+        clearUpdatePatientData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getPackageDetail.pending, (state) => {
+            .addCase(updatePatient.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getPackageDetail.fulfilled, (state, action) => {
+            .addCase(updatePatient.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getPackageDetail.rejected, (state) => {
+            .addCase(updatePatient.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetPackageDetail } = getPackageDetailSlice.actions;
-export default getPackageDetailSlice.reducer;
+export const { clearUpdatePatientData } = updatePatientSlice.actions;
+export default updatePatientSlice.reducer;

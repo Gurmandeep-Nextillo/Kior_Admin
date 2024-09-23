@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getPackageDetailApi } from "../utils/constants";
+import { ApiBaseUrl, addPatientApi } from "../utils/constants";
 
-export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payload) => {
+export const addPatient = createAsyncThunk("addPatient", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,39 +11,40 @@ export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payl
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + getPackageDetailApi;
-        const response = await axios.get(url, payload, config);
+        const url = ApiBaseUrl + addPatientApi;
+        const response = await axios.post(url, payload, config);
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getPackageDetailSlice = createSlice({
-    name: "getPackageDetailReducer",
+const addPatientSlice = createSlice({
+    name: "addPatientReducer",
+
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetPackageDetail: (state) => {
+        clearAddPatientData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getPackageDetail.pending, (state) => {
+            .addCase(addPatient.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getPackageDetail.fulfilled, (state, action) => {
+            .addCase(addPatient.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getPackageDetail.rejected, (state) => {
+            .addCase(addPatient.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetPackageDetail } = getPackageDetailSlice.actions;
-export default getPackageDetailSlice.reducer;
+export const { clearAddPatientData } = addPatientSlice.actions;
+export default addPatientSlice.reducer;

@@ -12,6 +12,12 @@ import addPackageReducer from "./addPackageListSlice";
 import updatePackageReducer from "./updatePackageSlice";
 import uploadFileReducer from "./uploadFileSlice";
 import getPackageDetailReducer from "./getPackageDetailSlice";
+import getPatientListReducer from "./getPatientListSlice";
+import addPatientReducer from "./addPatientSlice";
+import updatePatientReducer from "./updatePatientSlice";
+import getDoctorListReducer from "./getDoctorListSlice";
+import addDoctorReducer from "./addDoctorSlice";
+import updateDoctorReducer from "./updateDoctorSlice";
 
 const store = configureStore({
     reducer: {
@@ -28,6 +34,12 @@ const store = configureStore({
         updatePackageReducer: updatePackageReducer,
         uploadFileReducer: uploadFileReducer,
         getPackageDetailReducer: getPackageDetailReducer,
+        getPatientListReducer: getPatientListReducer,
+        addPatientReducer: addPatientReducer,
+        updatePatientReducer: updatePatientReducer,
+        getDoctorListReducer: getDoctorListReducer,
+        addDoctorReducer: addDoctorReducer,
+        updateDoctorReducer: updateDoctorReducer,
     },
 });
 

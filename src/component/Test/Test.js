@@ -319,7 +319,7 @@ const Test = () => {
                             <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
 
                             <div className='submit_btn'>
-                                <Button onClick={() => onSubmitClick()} > Submit</Button>
+                                <Button onClick={() => onSubmitClick()}> Submit</Button>
                             </div>
                         </div>
                     </Modal>

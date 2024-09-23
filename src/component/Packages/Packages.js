@@ -12,6 +12,7 @@ import { getTestList } from '../../redux/getTestListSlice';
 import AddIcon from '@mui/icons-material/Add';
 import { uploadFile } from '../../redux/uploadFileSlice';
 import { VisibilityTwoTone, VisibilityOffTwoTone } from "@mui/icons-material";
+import { getPackageDetail } from '../../redux/getPackageDetailSlice';
 
 const modal_setting = {
     content: {
@@ -48,6 +49,14 @@ const Packages = () => {
     const updatePackageSuccess = useSelector((state) => state.updatePackageReducer.data);
     const getTestListSuccess = useSelector((state) => state.getTestListReducer.data);
     const uploadFileResponse = useSelector((state) => state.uploadFileReducer.data);
+    const getPackageDetailSuccess = useSelector((state) => state.getPackageDetailReducer.data);
+
+    useEffect(() => {
+        console.log("getPackageDetailSuccess 1===>", getPackageDetailSuccess)
+        if (getPackageDetailSuccess != null && getPackageDetailSuccess.status == 1) {
+            setTests(getPackageDetailSuccess.data);
+        }
+    }, [getPackageDetailSuccess]);
 
 
     useEffect(() => {
@@ -76,7 +85,6 @@ const Packages = () => {
             setTests(getTestListSuccess.data)
         }
     }, [getTestListSuccess])
-
 
 
     const onSubmitClick = () => {
@@ -254,6 +262,18 @@ const Packages = () => {
         }
     }, [uploadFileResponse])
 
+
+    const onViewClick = () => {
+        setOpenTest(true)
+
+        const payload = {
+            padkageId: packageId,
+        }
+        dispatch(getPackageDetail(payload))
+
+    }
+
+
     return (
         <>
             <div className="dashboard">
@@ -304,7 +324,7 @@ const Packages = () => {
                                             className="passwod_btn"
                                             onClick={() => {
                                                 setShowPassword(!showPassword);
-                                                setOpenTest(true)
+                                                onViewClick();
                                             }}
                                         >
                                             {isOpenTest ? (
@@ -416,14 +436,12 @@ const Packages = () => {
                         onRequestClose={() => setOpenTest(false)}
                     >
                         <div className='modal_content_center package_modal'>
-                            {tests.length > 0 &&
-                                tests.map((item) => (
-                                    <tr>
-                                        <td style={{ paddingBottom: 10 }}>{item.name}</td>
-                                        <td style={{ paddingBottom: 10 }}>{item.amount}</td>
-
-                                    </tr>
-                                ))}
+                            {tests.map((item) => (
+                                <tr>
+                                    <td style={{ paddingBottom: 10 }}>{item.name}</td>
+                                    <td style={{ paddingBottom: 10 }}>{item.amount}</td>
+                                </tr>
+                            ))}
                             <div className='close_btn_modal'>
                                 <button onClick={() => { setShowPassword(false); setOpenTest(false) }} style={{ marginTop: '20px' }}>
                                     Close

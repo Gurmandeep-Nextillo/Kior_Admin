@@ -269,6 +269,12 @@
             box-shadow: 0 -4px 50px 0 rgba(11, 20, 26, 0.19), 0 5px 9px 0 rgba(11, 20, 26, 0.24);
 
             .modal_content_center {
+
+                .flex_input_box {
+                    @include display(space-between, center);
+                    gap: 10px;
+                }
+
                 p {
                     font-size: 18px;
                     font-weight: 500;
@@ -415,6 +421,7 @@
             .package_modal {
                 max-height: 430px;
                 overflow-y: scroll;
+                scrollbar-width: thin;
 
                 tr {
                     display: flex;

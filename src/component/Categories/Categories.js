@@ -29,10 +29,10 @@ const Categories = () => {
     const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryID] = useState("");
-    const [skip, setSkip] = useState(0)
+    const [skip, setSkip] = useState(0);
     const [name, setName] = useState("");
     const [isOpen, setOpen] = useState(false);
-    const [from, setFrom] = useState(0)
+    const [from, setFrom] = useState(0);
     const [image, setImage] = useState(null)
     const [imageSrc, setImageSrc] = useState(null);
     const [imageLocation, setImageLocation] = useState("");

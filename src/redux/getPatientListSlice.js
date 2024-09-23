@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getPackageDetailApi } from "../utils/constants";
+import { ApiBaseUrl, getPatientListApi, } from "../utils/constants";
 
-export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payload) => {
+export const getPatientList = createAsyncThunk("getPatientList", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,39 +11,41 @@ export const getPackageDetail = createAsyncThunk("getPackageDetail", async (payl
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + getPackageDetailApi;
-        const response = await axios.get(url, payload, config);
+        const skip = payload.skip
+        const url = `${ApiBaseUrl}${getPatientListApi}?skip=${skip}&limit=20`;
+        const response = await axios.get(url, config);
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getPackageDetailSlice = createSlice({
-    name: "getPackageDetailReducer",
+const getPatientListSlice = createSlice({
+    name: "getPatientListReducer",
+
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetPackageDetail: (state) => {
+        clearGetPatientListData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getPackageDetail.pending, (state) => {
+            .addCase(getPatientList.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getPackageDetail.fulfilled, (state, action) => {
+            .addCase(getPatientList.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getPackageDetail.rejected, (state) => {
+            .addCase(getPatientList.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetPackageDetail } = getPackageDetailSlice.actions;
-export default getPackageDetailSlice.reducer;
+export const { clearGetPatientListData } = getPatientListSlice.actions;
+export default getPatientListSlice.reducer;
