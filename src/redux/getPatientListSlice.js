@@ -11,10 +11,15 @@ export const getPatientList = createAsyncThunk("getPatientList", async (payload)
                 authorization: localStorage.getItem("token"),
             },
         };
+
         const skip = payload.skip
-        const url = `${ApiBaseUrl}${getPatientListApi}?skip=${skip}&limit=20`;
-        const response = await axios.get(url, config);
-        return response.data;
+        if (skip != -1) {
+            const url = `${ApiBaseUrl}${getPatientListApi}?skip=${skip}&limit=20`;
+            return (await axios.get(url, config)).data;
+        } else {
+            const url = `${ApiBaseUrl}${getPatientListApi}`;
+            return (await axios.get(url, config)).data;
+        }
     } catch (error) {
         throw error.response.data;
     }

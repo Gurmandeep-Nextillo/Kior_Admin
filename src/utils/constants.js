@@ -20,5 +20,10 @@ export const updatePatientApi = "/v1/admin/patients";
 export const getDoctorListApi = "/v1/admin/doctors";
 export const addDoctorApi = "/v1/admin/doctors";
 export const updateDoctorApi = "/v1/admin/doctors";
+export const getHospitalListApi = "/v1/admin/hospitals";
+export const addHospitalApi = "/v1/admin/hospitals";
+export const updateHospitalApi = "/v1/admin/hospitals";
+export const getBookingRecordApi = "/v1/admin/bookingRecords";
+export const postBookingRecordApi = "/v1/admin/bookingRecords";
 
 // http://43.205.184.78/v1/user/getPackageDetails?packageId=66c97a2da0e8bd0a2f3dd2f7

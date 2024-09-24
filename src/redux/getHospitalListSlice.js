@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, getTestListApi } from "../utils/constants";
+import { ApiBaseUrl, getHospitalListApi } from "../utils/constants";
 
-export const getTestList = createAsyncThunk("getTestList", async (payload) => {
+export const getHospitalList = createAsyncThunk("getHospitalList", async (payload) => {
     try {
         const config = {
             headers: {
@@ -12,45 +12,40 @@ export const getTestList = createAsyncThunk("getTestList", async (payload) => {
             },
         };
         const skip = payload.skip
-        if (skip != -1) {
-            const url = `${ApiBaseUrl}${getTestListApi}?skip=${skip}&limit=20`;
-            return (await axios.get(url, config)).data;
-        } else {
-            const url = `${ApiBaseUrl}${getTestListApi}`;
-            return (await axios.get(url, config)).data;
-        }
-
+        const url = `${ApiBaseUrl}${getHospitalListApi}?skip=${skip}&limit=20`;
+        const response = await axios.get(url, config);
+        return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const getTestListSlice = createSlice({
-    name: "getTestListReducer",
+const getHospitalListSlice = createSlice({
+    name: "getHospitalListReducer",
 
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearGetTestListData: (state) => {
+        clearGetHospitalListData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getTestList.pending, (state) => {
+            .addCase(getHospitalList.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getTestList.fulfilled, (state, action) => {
+            .addCase(getHospitalList.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(getTestList.rejected, (state) => {
+            .addCase(getHospitalList.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearGetTestListData } = getTestListSlice.actions;
-export default getTestListSlice.reducer;
+export const { clearGetHospitalListData } = getHospitalListSlice.actions;
+export default getHospitalListSlice.reducer;

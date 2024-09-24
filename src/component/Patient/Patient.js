@@ -11,7 +11,7 @@ import { updatePatient } from '../../redux/updatePatientSlice';
 
 const modal_setting = {
     content: {
-        top: "30%",
+        top: "20%",
         left: "50%",
         right: "auto",
         marginRight: "-50%",
@@ -231,28 +231,36 @@ const Patient = () => {
                     >
                         <div className='modal_content_center'>
                             <form>
-                                <p>First Name</p>
-                                <input type='text' placeholder='First Name' autoComplete='off' value={firstName} onChange={(e) => setFirstName(e.target.value)} /><br />
+                                <div className='flex_input_box'>
+                                    <div className='head_input_flex'>
+                                        <p>First Name <span>*</span></p>
+                                        <input type='text' placeholder='First Name' autoComplete='off' value={firstName} onChange={(e) => setFirstName(e.target.value)} /><br />
+                                    </div>
 
-                                <p style={{ marginTop: 16 }}>Last Name</p>
-                                <input type='text' placeholder='Last Name' autoComplete='off' value={lastName} onChange={(e) => setLastName(e.target.value)} /><br />
+                                    <div className='head_input_flex'>
+                                        <p>Last Name <span>*</span></p>
+                                        <input type='text' placeholder='Last Name' autoComplete='off' value={lastName} onChange={(e) => setLastName(e.target.value)} /><br />
+                                    </div>
+                                </div>
 
-                                <p style={{ marginTop: 16 }}>Email</p>
-                                <input type='text' placeholder='Email' autoComplete='off' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
+                                <div className='flex_input_box'>
+                                    <div className='head_input_flex'>
+                                        <p style={{ marginTop: 8 }}>Email <span>*</span></p>
+                                        <input type='text' placeholder='Email' autoComplete='off' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
+                                    </div>
 
-                                <p style={{ marginTop: 16 }}>Mobile Number</p>
-                                <input type='number' placeholder='Mobile Number' autoComplete='off' value={mobileNumber} onChange={(v) => setMobileNumber(v.target.value)} /><br />
+                                    <div className='head_input_flex'>
+                                        <p style={{ marginTop: 8 }}>Mobile Number <span>*</span></p>
+                                        <input type='number' placeholder='Mobile Number' autoComplete='off' value={mobileNumber} onChange={(v) => setMobileNumber(v.target.value)} /><br />
+                                    </div>
+                                </div>
 
-                                <p style={{ marginTop: 16 }}>Address</p>
-                                <input type='text' placeholder='Address' autoComplete='off' value={address} onChange={(e) => setAddress(e.target.value)} /><br />
-
-                                <p style={{ marginTop: 16 }}>Reffered By</p>
-                                <select>
-                                    <option>consultant</option>
-                                    doctor
-                                    <option>Corporate</option>
-                                    Hospital
-                                </select>
+                                <div className='flex_input_box'>
+                                    <div className='head_input_flex' style={{ width: '50%' }}>
+                                        <p style={{ marginTop: 8 }}>Address <span>*</span></p>
+                                        <input type='text' placeholder='Address' autoComplete='off' value={address} onChange={(e) => setAddress(e.target.value)} /><br />
+                                    </div>
+                                </div>
 
                             </form>
 
@@ -261,8 +269,8 @@ const Patient = () => {
                             </div>
                         </div>
                     </Modal>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     );
 };

@@ -12,11 +12,15 @@ export const getPackageList = createAsyncThunk("getPackageList", async (payload)
             },
         };
         const skip = payload.skip
-        const url = `${ApiBaseUrl}${getPackageListApi}?skip=${skip}&limit=20`;
-        console.log("Url ===>", url)
-        const response = await axios.get(url, config);
-        console.log("response package ===>", response.data)
-        return response.data;
+
+        if (skip != -1) {
+            const url = `${ApiBaseUrl}${getPackageListApi}?skip=${skip}&limit=20`;
+            return (await axios.get(url, config)).data;
+        } else {
+            const url = `${ApiBaseUrl}${getPackageListApi}`;
+            return (await axios.get(url, config)).data;
+        }
+
     } catch (error) {
         throw error.response.data;
     }

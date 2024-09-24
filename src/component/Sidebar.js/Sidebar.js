@@ -99,6 +99,22 @@ const Sidebar = () => {
                 </NavLink>
               </li>
               <li>
+                <NavLink to="/hospital" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
+                  {({ isActive }) => (
+                    <>
+                      <img src={patient_icon} alt="patient_icon" className={isActive ? 'active-link-img' : 'span_color-img'} />{" "}
+                      <span>Hospital</span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/booking" className={({ isActive }) => (isActive ? 'active-link' : 'span_color')}>
+                  <MedicationOutlinedIcon className={({ isActive }) => (isActive ? 'active-link' : 'span_color')} />{" "}
+                  <span>Booking</span>
+                </NavLink>
+              </li>
+              <li>
                 <NavLink onClick={() => onLogoutClick()} >
                   <LogoutIcon style={{ color: '#fff' }} />{" "}
                   <span style={{ color: '#fff' }}>Logout</span>

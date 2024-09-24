@@ -16,7 +16,7 @@ import { getPackageDetail } from '../../redux/getPackageDetailSlice';
 
 const modal_setting = {
     content: {
-        top: "30%",
+        top: "20%",
         left: "50%",
         right: "auto",
         marginRight: "-50%",
@@ -88,7 +88,6 @@ const Packages = () => {
 
 
     const onSubmitClick = () => {
-        setOpen(false);
         if (from == 0) {
             if (image != null) {
                 if (name.length == 0) {
@@ -96,6 +95,7 @@ const Packages = () => {
                 } if (amount.length == 0) {
                     alert("Please enter amount");
                 } else {
+                    setOpen(false);
                     dispatch(uploadFile(image));
                 }
             }
@@ -110,6 +110,7 @@ const Packages = () => {
                 } if (amount.length == 0) {
                     alert("Please enter amount");
                 } else {
+                    setOpen(false);
                     dispatch(uploadFile(image));
                 }
             }
@@ -255,7 +256,6 @@ const Packages = () => {
                     name: name,
                     amount: amount,
                     image: uploadFileResponse.Location,
-
                 };
                 dispatch(updatePackage(payload));
             }
@@ -345,7 +345,7 @@ const Packages = () => {
                         onRequestClose={() => setOpen(false)}
                     >
                         <div className='modal_content_center'>
-                            <p>Image</p>
+                            <p>Image <span style={{ color: '#10519e' }}>*</span></p>
                             <div className="add_picture">
                                 <input type="file" onChange={handleFileChange} className='file_upload' id='fileInput' />
                                 <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
@@ -354,7 +354,7 @@ const Packages = () => {
                                 <AddIcon />
                             </div>
                             <form onSubmit={(e) => e.preventDefault()}>
-                                <label htmlFor="dropdown-input">Test</label><br />
+                                <label htmlFor="dropdown-input">Test <span style={{ color: '#10519e' }}>*</span></label><br />
                                 <div style={{ position: 'relative', display: 'inline-block', width: '100%' }} >
                                     <input
                                         id="dropdown-input"
@@ -388,7 +388,7 @@ const Packages = () => {
                                                 margin: 0,
                                                 padding: '5px',
                                                 width: '100%',
-                                                maxHeight: '150px',
+                                                maxHeight: '212px',
                                                 overflowY: 'auto',
                                             }}
                                         >
@@ -420,10 +420,18 @@ const Packages = () => {
                                     )}
                                 </div>
                             </form>
-                            <p style={{ marginTop: 16 }}>Name</p>
-                            <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
-                            <p style={{ marginTop: 16 }}>Amount</p>
-                            <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
+                            <div className='flex_input_box'>
+                                <div className='head_input_flex'>
+                                    <p style={{ marginTop: 16 }}>Name <span>*</span></p>
+                                    <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
+
+                                </div>
+
+                                <div className='head_input_flex'>
+                                    <p style={{ marginTop: 16 }}>Amount <span>*</span></p>
+                                    <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
+                                </div>
+                            </div>
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>
                             </div>

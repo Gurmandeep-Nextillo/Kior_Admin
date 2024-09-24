@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, addPackageApi } from "../utils/constants";
+import { ApiBaseUrl, getBookingRecordApi, getPatientListApi, } from "../utils/constants";
 
-export const addPackage = createAsyncThunk("addPackage", async (payload) => {
+export const getBookingRecord = createAsyncThunk("getBookingRecord", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,39 +11,41 @@ export const addPackage = createAsyncThunk("addPackage", async (payload) => {
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + addPackageApi;
-        const response = await axios.post(url, payload, config);
+        const url = ApiBaseUrl + getBookingRecordApi;
+        console.log("URL ===>", url)
+        const response = await axios.get(url, config);
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const addPackageListSlice = createSlice({
-    name: "addPackageReducer",
+const getBookingRecordSlice = createSlice({
+    name: "getBookingRecordReducer",
+
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearAddPackageData: (state) => {
+        clearGetBookingRecordData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(addPackage.pending, (state) => {
+            .addCase(getBookingRecord.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(addPackage.fulfilled, (state, action) => {
+            .addCase(getBookingRecord.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(addPackage.rejected, (state) => {
+            .addCase(getBookingRecord.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearAddPackageData } = addPackageListSlice.actions;
-export default addPackageListSlice.reducer;
+export const { clearGetBookingRecordData } = getBookingRecordSlice.actions;
+export default getBookingRecordSlice.reducer;

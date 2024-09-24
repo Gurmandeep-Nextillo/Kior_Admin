@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, addPackageApi } from "../utils/constants";
+import { ApiBaseUrl, updateHospitalApi } from "../utils/constants";
 
-export const addPackage = createAsyncThunk("addPackage", async (payload) => {
+export const updateHospital = createAsyncThunk("updateHospital", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,39 +11,41 @@ export const addPackage = createAsyncThunk("addPackage", async (payload) => {
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + addPackageApi;
-        const response = await axios.post(url, payload, config);
+        const url = ApiBaseUrl + updateHospitalApi;
+        console.log("url ==>", url, payload)
+        const response = await axios.put(url, payload, config);
+        console.log("response.data ==>", response.data)
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 });
 
-const addPackageListSlice = createSlice({
-    name: "addPackageReducer",
+const updateHospitalSlice = createSlice({
+    name: "updateHospitalReducer",
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearAddPackageData: (state) => {
+        clearUpdateHospitalData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(addPackage.pending, (state) => {
+            .addCase(updateHospital.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(addPackage.fulfilled, (state, action) => {
+            .addCase(updateHospital.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(addPackage.rejected, (state) => {
+            .addCase(updateHospital.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearAddPackageData } = addPackageListSlice.actions;
-export default addPackageListSlice.reducer;
+export const { clearUpdateHospitalData } = updateHospitalSlice.actions;
+export default updateHospitalSlice.reducer;

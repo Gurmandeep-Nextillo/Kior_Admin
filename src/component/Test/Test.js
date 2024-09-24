@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const modal_setting = {
     content: {
-        top: "30%",
+        top: "20%",
         left: "50%",
         right: "auto",
         marginRight: "-50%",
@@ -57,7 +57,6 @@ const Test = () => {
     }, [skip]);
 
     const onSubmitClick = () => {
-        setOpen(false);
         if (selectedOptionName.length == 0) {
             alert("Please select your Category!");
         } else if (name.length == 0) {
@@ -71,7 +70,7 @@ const Test = () => {
                     amount: amount,
                     categoryId: selectedOption
                 };
-
+                setOpen(false);
                 dispatch(addTest(payload));
             }
             else {
@@ -80,6 +79,7 @@ const Test = () => {
                     name: name,
                     amount: amount,
                 };
+                setOpen(false);
                 dispatch(updateTest(payload))
             }
         }
@@ -257,7 +257,7 @@ const Test = () => {
                             <form onSubmit={handleSubmit}>
                                 {from ? "" :
                                     <div>
-                                        <label htmlFor="dropdown-input">Category</label><br />
+                                        <label htmlFor="dropdown-input">Category <span style={{ color: '#10519e' }}>*</span></label><br />
                                         <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
                                             <input
                                                 id="dropdown-input"
@@ -274,7 +274,7 @@ const Test = () => {
                                                     marginLeft: '5px',
                                                     position: 'absolute',
                                                     right: 15,
-                                                    top: 20
+                                                    top: 20,
                                                 }}
                                             >
                                                 ▼
@@ -313,11 +313,17 @@ const Test = () => {
                                     </div>
                                 }
                             </form>
-                            <p style={{ marginTop: 16 }}>Name</p>
-                            <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
-                            <p style={{ marginTop: 16 }}>Amount</p>
-                            <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
+                            <div className='flex_input_box'>
+                                <div className='head_input_flex'>
+                                    <p style={{ marginTop: 16 }}>Name <span >*</span></p>
+                                    <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
+                                </div>
 
+                                <div className='head_input_flex'>
+                                    <p style={{ marginTop: 16 }}>Amount <span>*</span></p>
+                                    <input type='number' placeholder='amount' autoComplete='off' value={amount} onChange={(v) => setAmount(v.target.value)} /><br />
+                                </div>
+                            </div>
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()}> Submit</Button>
                             </div>

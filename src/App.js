@@ -10,6 +10,9 @@ import Categories from './component/Categories/Categories';
 import Packages from './component/Packages/Packages';
 import Patient from './component/Patient/Patient';
 import Doctor from './component/Doctor/Doctor';
+import Hospital from './component/Hospital/Hospital';
+import Booking from './component/Booking/Booking';
+import AddNewPatient from './component/Booking/AddNewPatient';
 
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
             <Route path="/packages" element={<Packages />} />
             <Route path="/patient" element={<Patient />} />
             <Route path="/doctor" element={<Doctor />} />
+            <Route path="/hospital" element={<Hospital />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/add_new_patient" element={<AddNewPatient />} />
           </Routes>
         </Router>
       </Provider>,

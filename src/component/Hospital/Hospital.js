@@ -5,13 +5,13 @@ import Modal from 'react-modal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDoctorList } from '../../redux/getDoctorListSlice';
-import { addDoctor } from '../../redux/addDoctorSlice';
-import { updateDoctor } from '../../redux/updateDoctorSlice';
+import { addHospital } from '../../redux/addHospitalSlice';
+import { updateHospital } from '../../redux/updateHospitalSlice';
+import { getHospitalList } from '../../redux/getHospitalListSlice';
 
 const modal_setting = {
     content: {
-        top: "30%",
+        top: "20%",
         left: "50%",
         right: "auto",
         marginRight: "-50%",
@@ -22,37 +22,39 @@ const modal_setting = {
     },
 };
 
-const Doctor = () => {
+const Hospital = () => {
 
     const dispatch = useDispatch();
-    const [doctor, setDoctor] = useState([]);
-    const [doctorId, setDoctorID] = useState("");
+    const [hospital, setHospital] = useState([]);
+    const [hospitalId, setHospitalID] = useState("");
     const [skip, setSkip] = useState(0);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [mobileNumber, setMobileNumber] = useState("");
+    const [address, setAddress] = useState("");
     const [from, setFrom] = useState(0);
     const [isOpen, setOpen] = useState(false);
 
 
-    const getDoctorListSuccess = useSelector((state) => state.getDoctorListReducer.data);
-    const addDoctorSuccess = useSelector((state) => state.addDoctorReducer.data);
-    const updateDoctorSuccess = useSelector((state) => state.updateDoctorReducer.data);
+    const getHospitalListSuccess = useSelector((state) => state.getHospitalListReducer.data);
+    const addHospitalSuccess = useSelector((state) => state.addHospitalReducer.data);
+    const updateHospitalSuccess = useSelector((state) => state.updateHospitalReducer.data);
 
 
     useEffect(() => {
-        if (getDoctorListSuccess != null && getDoctorListSuccess.status == 1) {
-            setDoctor(getDoctorListSuccess.data);
+        if (getHospitalListSuccess != null && getHospitalListSuccess.status == 1) {
+            setHospital(getHospitalListSuccess.data);
         }
-    }, [getDoctorListSuccess]);
+    }, [getHospitalListSuccess]);
 
     useEffect(() => {
         const paylaod = {
             skip: skip,
         }
-        dispatch(getDoctorList(paylaod));
+        dispatch(getHospitalList(paylaod));
     }, [skip]);
+
 
     const onSubmitClick = () => {
         if (firstName.length == 0) {
@@ -63,6 +65,8 @@ const Doctor = () => {
             alert("Please enter email");
         } else if (mobileNumber.length == 0) {
             alert("Please enter mobile number");
+        } else if (address.length == 0) {
+            alert("Please enter address");
         } else {
             if (from == 0) {
                 const payload = {
@@ -70,20 +74,22 @@ const Doctor = () => {
                     lastName: lastName,
                     email: email,
                     mobileNumber: mobileNumber,
+                    address: address,
                 };
                 setOpen(false);
-                dispatch(addDoctor(payload));
+                dispatch(addHospital(payload));
             }
             else {
                 const payload = {
-                    doctorId: doctorId,
+                    hospitalId: hospitalId,
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
                     mobileNumber: mobileNumber,
+                    address: address,
                 };
                 setOpen(false);
-                dispatch(updateDoctor(payload))
+                dispatch(updateHospital(payload))
             }
         }
     };
@@ -94,22 +100,23 @@ const Doctor = () => {
             lastName: item.lastName,
             email: item.email,
             mobileNumber: item.mobileNumber,
-            doctorId: item._id,
+            address: item.address,
+            hospitalId: item._id,
             isActive: item.isActive == 1 ? 0 : 1,
             isDeleted: item.isDeleted
         }
-        dispatch(updateDoctor(payload));
+        dispatch(updateHospital(payload))
     };
 
     useEffect(() => {
-        console.log("addDoctorSuccess  ===>", addDoctorSuccess)
-        if (addDoctorSuccess != null && addDoctorSuccess.status == 1) {
+        console.log("addHospitalSuccess  ===>", addHospitalSuccess)
+        if (addHospitalSuccess != null && addHospitalSuccess.status == 1) {
             const paylaod = {
                 skip: skip,
             }
-            dispatch(getDoctorList(paylaod));
+            dispatch(getHospitalList(paylaod));
         }
-    }, [addDoctorSuccess]);
+    }, [addHospitalSuccess]);
 
     const onDeleteClick = (item) => {
         const payload = {
@@ -117,11 +124,12 @@ const Doctor = () => {
             lastName: item.lastName,
             email: item.email,
             mobileNumber: item.mobileNumber,
-            doctorId: item._id,
+            address: item.address,
+            hospitalId: item._id,
             isActive: 0,
             isDeleted: 1,
         }
-        dispatch(updateDoctor(payload))
+        dispatch(updateHospital(payload))
     }
 
     const onEditClick = (item) => {
@@ -130,9 +138,10 @@ const Doctor = () => {
         setLastName(item.lastName)
         setEmail(item.email)
         setMobileNumber(item.mobileNumber)
-        setDoctorID(item._id)
+        setAddress(item.address)
         setOpen(true)
     }
+
 
     const onAddClick = () => {
         setFrom(0)
@@ -140,22 +149,24 @@ const Doctor = () => {
         setLastName("")
         setEmail("")
         setMobileNumber("")
+        setAddress("")
         setOpen(true)
     }
 
     useEffect(() => {
-        console.log("updateDoctorSuccess  ===>", updateDoctorSuccess)
-        if (updateDoctorSuccess != null && updateDoctorSuccess.status == 1) {
+        if (updateHospitalSuccess != null && updateHospitalSuccess.status == 1) {
             setFirstName("")
             setLastName("")
             setEmail("")
             setMobileNumber("")
+            setAddress("")
             const paylaod = {
                 skip: 0,
             }
-            dispatch(getDoctorList(paylaod));
+            dispatch(getHospitalList(paylaod));
         }
-    }, [updateDoctorSuccess])
+    }, [updateHospitalSuccess])
+
 
     return (
         <>
@@ -164,7 +175,7 @@ const Doctor = () => {
                 <div className='table_categories'>
                     <div className='categories_head'>
                         <div className='content_dropdown'>
-                            <h2>Doctor</h2>
+                            <h2>Hospital</h2>
                         </div>
                         <div className='search_categories_btn'>
                             <div class="box">
@@ -174,30 +185,32 @@ const Doctor = () => {
                                     <span class="caret"></span>
                                 </form>
                             </div>
-                            <Button type='button' onClick={() => onAddClick()}>Add Doctor</Button>
+                            <Button type='button' onClick={() => onAddClick()}>Add Hospital</Button>
                         </div>
                     </div>
 
                     <Table responsive bordered>
-                        <thead>
+                        <thead className='tabel_head'>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile Number</th>
+                                <th>Address</th>
                                 <th>Status</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {doctor.length > 0 && doctor.map((item) => (
+                            {hospital.length > 0 && hospital.map((item) => (
                                 <tr >
                                     <td>{item.firstName + " " + item.lastName}</td>
-                                    <td>{item.email}</td>
+                                    <td> {item.email}</td>
                                     <td>{item.mobileNumber}</td>
+                                    <td>{item.address}</td>
                                     <td>
                                         <div className='switch_btn_center'>
-                                            <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={(val) => toggleSwitch(item)}>
+                                            <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={() => toggleSwitch(item)}>
                                                 <div className="toggle"></div>
                                             </div>
                                         </div>
@@ -232,14 +245,23 @@ const Doctor = () => {
 
                                 <div className='flex_input_box'>
                                     <div className='head_input_flex'>
-                                        <p>Email <span>*</span></p>
+                                        <p style={{ marginTop: 8 }}>Email <span>*</span></p>
                                         <input type='text' placeholder='Email' autoComplete='off' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
                                     </div>
+
                                     <div className='head_input_flex'>
-                                        <p>Mobile Number <span>*</span></p>
-                                        <input type='number' placeholder='Mobile Number' autoComplete='off' value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} /><br />
+                                        <p style={{ marginTop: 8 }}>Mobile Number <span>*</span></p>
+                                        <input type='number' placeholder='Mobile Number' autoComplete='off' value={mobileNumber} onChange={(v) => setMobileNumber(v.target.value)} /><br />
                                     </div>
                                 </div>
+
+                                <div className='flex_input_box'>
+                                    <div className='head_input_flex' style={{ width: '50%' }}>
+                                        <p style={{ marginTop: 8 }}>Address <span>*</span></p>
+                                        <input type='text' placeholder='Address' autoComplete='off' value={address} onChange={(e) => setAddress(e.target.value)} /><br />
+                                    </div>
+                                </div>
+
                             </form>
 
                             <div className='submit_btn'>
@@ -253,4 +275,4 @@ const Doctor = () => {
     );
 };
 
-export default Doctor;
+export default Hospital;

@@ -13,7 +13,7 @@ import { uploadFile } from '../../redux/uploadFileSlice';
 
 const modal_setting = {
     content: {
-        top: "30%",
+        top: "20%",
         left: "50%",
         right: "auto",
         marginRight: "-50%",
@@ -67,12 +67,12 @@ const Categories = () => {
     }, [addCategorySuccess]);
 
     const onSubmitClick = () => {
-        setOpen(false);
         if (from == 0) {
             if (image != null) {
                 if (name.length == 0) {
                     alert("Please enter name!");
                 } else {
+                    setOpen(false);
                     dispatch(uploadFile(image));
                 }
             }
@@ -86,6 +86,7 @@ const Categories = () => {
                 if (name.length == 0) {
                     alert("Please enter name!");
                 } else {
+                    setOpen(false);
                     dispatch(uploadFile(image));
                 }
             }
@@ -240,7 +241,7 @@ const Categories = () => {
                         onRequestClose={() => setOpen(false)}
                     >
                         <div className='modal_content_center'>
-                            <p>Image</p>
+                            <p>Image <span style={{ color: '#10519e' }}>*</span></p>
                             <div className="add_picture">
                                 <input type="file" onChange={handleFileChange} className='file_upload' id='fileInput' />
                                 <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
@@ -248,7 +249,7 @@ const Categories = () => {
                                 </label>
                                 <AddIcon />
                             </div>
-                            <p >Name</p>
+                            <p >Name <span style={{ color: '#10519e' }}>*</span></p>
                             <input type='text' placeholder='name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                             <div className='submit_btn'>
                                 <Button onClick={() => onSubmitClick()} > Submit</Button>

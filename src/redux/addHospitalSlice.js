@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiBaseUrl, addPackageApi } from "../utils/constants";
+import { ApiBaseUrl, addHospitalApi } from "../utils/constants";
 
-export const addPackage = createAsyncThunk("addPackage", async (payload) => {
+export const addHospital = createAsyncThunk("addHospital", async (payload) => {
     try {
         const config = {
             headers: {
@@ -11,7 +11,7 @@ export const addPackage = createAsyncThunk("addPackage", async (payload) => {
                 authorization: localStorage.getItem("token"),
             },
         };
-        const url = ApiBaseUrl + addPackageApi;
+        const url = ApiBaseUrl + addHospitalApi;
         const response = await axios.post(url, payload, config);
         return response.data;
     } catch (error) {
@@ -19,31 +19,32 @@ export const addPackage = createAsyncThunk("addPackage", async (payload) => {
     }
 });
 
-const addPackageListSlice = createSlice({
-    name: "addPackageReducer",
+const addHospitalSlice = createSlice({
+    name: "addHospitalReducer",
+
     initialState: {
         isLoading: false,
         data: null,
     },
     reducers: {
-        clearAddPackageData: (state) => {
+        clearAddHospitalData: (state) => {
             state.data = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(addPackage.pending, (state) => {
+            .addCase(addHospital.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(addPackage.fulfilled, (state, action) => {
+            .addCase(addHospital.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
             })
-            .addCase(addPackage.rejected, (state) => {
+            .addCase(addHospital.rejected, (state) => {
                 state.isError = false;
             });
     },
 });
 
-export const { clearAddPackageData } = addPackageListSlice.actions;
-export default addPackageListSlice.reducer;
+export const { clearAddHospitalData } = addHospitalSlice.actions;
+export default addHospitalSlice.reducer;

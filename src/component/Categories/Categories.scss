@@ -23,6 +23,22 @@
                         letter-spacing: .3px;
                     }
                 }
+
+                input {
+                    width: 100%;
+                    border: 1px solid $border_color;
+                    background-color: $white;
+                    font-size: 16px;
+                    letter-spacing: 0.4px;
+                    color: $black;
+                    padding: 6px 10px;
+                    border-radius: 4px;
+                }
+
+                .input_dropdown {
+                    width: 350px !important;
+                    padding: 8px 35px 8px 10px;
+                }
             }
 
             .search_categories_btn {
@@ -33,7 +49,7 @@
 
         .box {
             .input {
-                color: black;
+                color: $black;
                 font: 1em/1.5 Hind, sans-serif;
             }
 
@@ -255,6 +271,135 @@
             }
         }
     }
+
+    form {
+        .flex_input_box {
+            @include display(space-between, flex-start);
+            gap: 20px;
+
+            .head_input_flex {
+                @include display(flex-start, flex-start);
+                flex-direction: column;
+                width: 100%;
+
+                label {
+                    font-size: 17px;
+                    font-weight: 500;
+                    color: $black;
+                }
+
+                input {
+                    margin-top: 12px;
+                    width: 100%;
+                    border: 1px solid $border_color;
+                    background-color: $white;
+                    font-size: 16px;
+                    letter-spacing: 0.4px;
+                    color: $black;
+                    padding: 8px 10px;
+                    border-radius: 4px;
+                }
+
+                select {
+                    padding: 8px 10px;
+                    width: 100%;
+                    border: 1px solid $border_color;
+                    margin-top: 12px;
+                    background-color: $white;
+                    font-size: 16px;
+                    letter-spacing: 0.4px;
+                    color: $black;
+                    border-radius: 4px;
+                    box-shadow: none;
+                    outline: none;
+                }
+
+                .label_h2 {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+            }
+
+            .head_input_flex_none {
+                width: 100%;
+
+                label {
+                    font-size: 17px;
+                    font-weight: 500;
+                    color: $black;
+                }
+
+                input {
+                    margin-top: 12px;
+                    width: 100%;
+                    border: 1px solid $border_color;
+                    background-color: $white;
+                    font-size: 16px;
+                    letter-spacing: 0.4px;
+                    color: $black;
+                    padding: 8px 40px 10px 8px;
+                    border-radius: 4px;
+                }
+
+                select {
+                    padding: 8px 10px;
+                    width: 100%;
+                    border: 1px solid $border_color;
+                    margin-top: 12px;
+                    background-color: $white;
+                    font-size: 16px;
+                    letter-spacing: 0.4px;
+                    color: $black;
+                    border-radius: 4px;
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+        }
+
+
+
+        .submit_btn {
+            margin-top: 30px;
+
+            button {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .text_patient {
+        margin-top: 20px;
+
+        select {
+            padding: 8px 10px;
+            width: 100%;
+            border: 1px solid $border_color;
+            margin-top: 12px;
+            background-color: $white;
+            font-size: 16px;
+            letter-spacing: 0.4px;
+            color: $black;
+            border-radius: 4px;
+            box-shadow: none;
+            outline: none;
+        }
+    }
+}
+
+.search_input_dropdown_doctor {
+    width: 350px !important;
+    padding: 8px 35px 8px 10px;
+    border: 1px solid $border_color;
+    background-color: $white;
+    font-size: 16px;
+    letter-spacing: .4px;
+    color: $black;
+    border-radius: 4px;
+
+    &::placeholder {
+        color: $grey;
+    }
 }
 
 .ReactModalPortal {
@@ -267,16 +412,76 @@
             height: fit-content;
             padding: 25px 20px 50px !important;
             box-shadow: 0 -4px 50px 0 rgba(11, 20, 26, 0.19), 0 5px 9px 0 rgba(11, 20, 26, 0.24);
+            width: 60% !important;
+
+            @media($breakpoint_XL) {
+                width: 70% !important;
+            }
+
+            @media($breakpoint_LG) {
+                width: 75% !important;
+            }
+
+            @media($breakpoint_MD) {
+                width: 80% !important;
+            }
 
             .modal_content_center {
+                margin-top: 10px;
+
+                .img_content {
+                    @include display(flex-start, flex-start);
+                    gap: 3px;
+                    margin-bottom: 10px;
+
+                    img {
+                        width: 25px;
+                        transform: rotate(90deg);
+                        margin-bottom: 15px;
+                        margin-left: -10px;
+                        margin-top: 2px;
+                        cursor: pointer;
+                    }
+
+                    p {
+                        font-size: 16px;
+                        color: gray;
+                    }
+                }
 
                 .flex_input_box {
-                    @include display(space-between, center);
+                    @include display(space-between, flex-start);
                     gap: 10px;
+
+                    .head_input_flex {
+                        @include display(flex-start, flex-start);
+                        flex-direction: column;
+                        width: 100%;
+
+                        p {
+                            span {
+                                color: $blue_text;
+                            }
+                        }
+
+                        select {
+                            padding: 8px 10px;
+                            width: 100%;
+                            border: 1px solid $border_color;
+                            margin-top: 12px;
+                            background-color: $white;
+                            font-size: 16px;
+                            letter-spacing: 0.4px;
+                            color: $black;
+                            border-radius: 4px;
+                            box-shadow: none;
+                            outline: none;
+                        }
+                    }
                 }
 
                 p {
-                    font-size: 18px;
+                    font-size: 17px;
                     font-weight: 500;
                     color: $black;
                 }
@@ -416,6 +621,37 @@
                         }
                     }
                 }
+
+                .categories_head {
+                    @include display(space-between, initial);
+                    margin-bottom: 10px;
+
+                    .content_dropdown {
+                        @include display(center, center);
+                    }
+
+                    .search_categories_btn {
+                        @include display(center, center);
+                        gap: 15px;
+
+                        button {
+                            background-color: $black;
+                            border: 1px solid $black;
+                            border-radius: 6px;
+                            padding: 9px 20px;
+                            color: $white;
+                            font-weight: 600;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .scroll_content {
+                    max-height: 150px;
+                    overflow-y: scroll;
+                    scrollbar-width: thin;
+                    border-bottom: 1px solid $border_color;
+                }
             }
 
             .package_modal {
@@ -450,6 +686,28 @@
                         cursor: pointer;
                     }
                 }
+            }
+        }
+
+        .modal_open_width {
+            width: 40% !important;
+            position: relative;
+            background-color: $white !important;
+
+            @media($breakpoint_XL) {
+                width: 50% !important;
+            }
+
+            @media($breakpoint_LG) {
+                width: 60% !important;
+            }
+
+            @media($breakpoint_MD) {
+                width: 80% !important;
+            }
+
+            @media($breakpoint_SM) {
+                width: 95% !important;
             }
         }
     }

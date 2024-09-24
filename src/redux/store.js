@@ -18,6 +18,11 @@ import updatePatientReducer from "./updatePatientSlice";
 import getDoctorListReducer from "./getDoctorListSlice";
 import addDoctorReducer from "./addDoctorSlice";
 import updateDoctorReducer from "./updateDoctorSlice";
+import getHospitalListReducer from "./getHospitalListSlice";
+import addHospitalReducer from "./addHospitalSlice";
+import updateHospitalReducer from "./updateHospitalSlice";
+import getBookingRecordReducer from "./getBookingRecordSlice";
+import postBookingRecordSReducer from "./postBookingRecordSlice";
 
 const store = configureStore({
     reducer: {
@@ -40,6 +45,11 @@ const store = configureStore({
         getDoctorListReducer: getDoctorListReducer,
         addDoctorReducer: addDoctorReducer,
         updateDoctorReducer: updateDoctorReducer,
+        getHospitalListReducer: getHospitalListReducer,
+        addHospitalReducer: addHospitalReducer,
+        updateHospitalReducer: updateHospitalReducer,
+        getBookingRecordReducer: getBookingRecordReducer,
+        postBookingRecordSReducer: postBookingRecordSReducer,
     },
 });
 
