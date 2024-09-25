@@ -70,7 +70,6 @@ const Test = () => {
                     amount: amount,
                     categoryId: selectedOption
                 };
-                setOpen(false);
                 dispatch(addTest(payload));
             }
             else {

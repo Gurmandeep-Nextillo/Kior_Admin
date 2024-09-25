@@ -337,7 +337,7 @@
                     font-size: 16px;
                     letter-spacing: 0.4px;
                     color: $black;
-                    padding: 8px 40px 10px 8px;
+                    padding: 8px 40px 8px 10px;
                     border-radius: 4px;
                 }
 
@@ -388,7 +388,7 @@
 }
 
 .search_input_dropdown_doctor {
-    width: 350px !important;
+    width: 100% !important;
     padding: 8px 35px 8px 10px;
     border: 1px solid $border_color;
     background-color: $white;

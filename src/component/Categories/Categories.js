@@ -96,6 +96,7 @@ const Categories = () => {
                     name: name,
                     image: imageLocation,
                 };
+                setOpen(false);
                 dispatch(updateCategory(payload))
             }
         }

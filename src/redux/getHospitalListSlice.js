@@ -12,9 +12,13 @@ export const getHospitalList = createAsyncThunk("getHospitalList", async (payloa
             },
         };
         const skip = payload.skip
-        const url = `${ApiBaseUrl}${getHospitalListApi}?skip=${skip}&limit=20`;
-        const response = await axios.get(url, config);
-        return response.data;
+        if (skip != -1) {
+            const url = `${ApiBaseUrl}${getHospitalListApi}?skip=${skip}&limit=20`;
+            return (await axios.get(url, config)).data;
+        } else {
+            const url = `${ApiBaseUrl}${getHospitalListApi}`;
+            return (await axios.get(url, config)).data;
+        }
     } catch (error) {
         throw error.response.data;
     }

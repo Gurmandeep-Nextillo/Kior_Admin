@@ -28,8 +28,7 @@ const Hospital = () => {
     const [hospital, setHospital] = useState([]);
     const [hospitalId, setHospitalID] = useState("");
     const [skip, setSkip] = useState(0);
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [mobileNumber, setMobileNumber] = useState("");
     const [address, setAddress] = useState("");
@@ -57,10 +56,8 @@ const Hospital = () => {
 
 
     const onSubmitClick = () => {
-        if (firstName.length == 0) {
-            alert("Please enter firstName");
-        } else if (lastName.length == 0) {
-            alert("Please enter lastName");
+        if (name.length == 0) {
+            alert("Please enter name");
         } else if (email.length == 0) {
             alert("Please enter email");
         } else if (mobileNumber.length == 0) {
@@ -70,8 +67,7 @@ const Hospital = () => {
         } else {
             if (from == 0) {
                 const payload = {
-                    firstName: firstName,
-                    lastName: lastName,
+                    name: name,
                     email: email,
                     mobileNumber: mobileNumber,
                     address: address,
@@ -82,8 +78,7 @@ const Hospital = () => {
             else {
                 const payload = {
                     hospitalId: hospitalId,
-                    firstName: firstName,
-                    lastName: lastName,
+                    name: name,
                     email: email,
                     mobileNumber: mobileNumber,
                     address: address,
@@ -96,8 +91,7 @@ const Hospital = () => {
 
     const toggleSwitch = (item) => {
         const payload = {
-            firstName: item.firstName,
-            lastName: item.lastName,
+            name: item.name,
             email: item.email,
             mobileNumber: item.mobileNumber,
             address: item.address,
@@ -120,8 +114,7 @@ const Hospital = () => {
 
     const onDeleteClick = (item) => {
         const payload = {
-            firstName: item.firstName,
-            lastName: item.lastName,
+            name: item.name,
             email: item.email,
             mobileNumber: item.mobileNumber,
             address: item.address,
@@ -134,8 +127,7 @@ const Hospital = () => {
 
     const onEditClick = (item) => {
         setFrom(1)
-        setFirstName(item.firstName)
-        setLastName(item.lastName)
+        setName(item.name)
         setEmail(item.email)
         setMobileNumber(item.mobileNumber)
         setAddress(item.address)
@@ -145,8 +137,7 @@ const Hospital = () => {
 
     const onAddClick = () => {
         setFrom(0)
-        setFirstName("")
-        setLastName("")
+        setName("")
         setEmail("")
         setMobileNumber("")
         setAddress("")
@@ -155,8 +146,7 @@ const Hospital = () => {
 
     useEffect(() => {
         if (updateHospitalSuccess != null && updateHospitalSuccess.status == 1) {
-            setFirstName("")
-            setLastName("")
+            setName("")
             setEmail("")
             setMobileNumber("")
             setAddress("")
@@ -204,7 +194,7 @@ const Hospital = () => {
                         <tbody>
                             {hospital.length > 0 && hospital.map((item) => (
                                 <tr >
-                                    <td>{item.firstName + " " + item.lastName}</td>
+                                    <td>{item.name}</td>
                                     <td> {item.email}</td>
                                     <td>{item.mobileNumber}</td>
                                     <td>{item.address}</td>
@@ -233,35 +223,25 @@ const Hospital = () => {
                             <form>
                                 <div className='flex_input_box'>
                                     <div className='head_input_flex'>
-                                        <p>First Name <span>*</span></p>
-                                        <input type='text' placeholder='First Name' autoComplete='off' value={firstName} onChange={(e) => setFirstName(e.target.value)} /><br />
+                                        <p>Name <span>*</span></p>
+                                        <input type='text' placeholder='Name' autoComplete='off' value={name} onChange={(e) => setName(e.target.value)} /><br />
                                     </div>
-
                                     <div className='head_input_flex'>
-                                        <p>Last Name <span>*</span></p>
-                                        <input type='text' placeholder='Last Name' autoComplete='off' value={lastName} onChange={(e) => setLastName(e.target.value)} /><br />
+                                        <p>Email <span>*</span></p>
+                                        <input type='text' placeholder='Email' autoComplete='off' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
                                     </div>
                                 </div>
 
                                 <div className='flex_input_box'>
-                                    <div className='head_input_flex'>
-                                        <p style={{ marginTop: 8 }}>Email <span>*</span></p>
-                                        <input type='text' placeholder='Email' autoComplete='off' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
-                                    </div>
-
                                     <div className='head_input_flex'>
                                         <p style={{ marginTop: 8 }}>Mobile Number <span>*</span></p>
                                         <input type='number' placeholder='Mobile Number' autoComplete='off' value={mobileNumber} onChange={(v) => setMobileNumber(v.target.value)} /><br />
                                     </div>
-                                </div>
-
-                                <div className='flex_input_box'>
-                                    <div className='head_input_flex' style={{ width: '50%' }}>
+                                    <div className='head_input_flex'>
                                         <p style={{ marginTop: 8 }}>Address <span>*</span></p>
                                         <input type='text' placeholder='Address' autoComplete='off' value={address} onChange={(e) => setAddress(e.target.value)} /><br />
                                     </div>
                                 </div>
-
                             </form>
 
                             <div className='submit_btn'>

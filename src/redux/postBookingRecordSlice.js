@@ -13,6 +13,7 @@ export const postBookingRecord = createAsyncThunk("postBookingRecord", async (pa
         };
         const url = ApiBaseUrl + postBookingRecordApi;
         const response = await axios.post(url, payload, config);
+        console.log("Response booking ", response.data)
         return response.data;
     } catch (error) {
         throw error.response.data;

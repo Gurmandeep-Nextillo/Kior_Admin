@@ -7,12 +7,16 @@ import { getPatientList } from '../../redux/getPatientListSlice';
 import { getDoctorList } from '../../redux/getDoctorListSlice';
 import { getPackageList } from '../../redux/getPackageListSlice';
 import { getTestList } from '../../redux/getTestListSlice';
+import { getHospitalList } from '../../redux/getHospitalListSlice';
+import { postBookingRecord } from '../../redux/postBookingRecordSlice';
 
 const AddNewPatient = () => {
 
+    const dispatch = useDispatch()
     //Patient Fields
     const [patients, setPatients] = useState([])
     const [selectedPatient, setSelectedPatient] = useState(null)
+    const [patientId, setPatientId] = useState("")
     const [patientFirstName, setPatientFirstName] = useState("")
     const [patientLastName, setPatientLastName] = useState("")
     const [patientEmail, setPatientEmail] = useState("")
@@ -21,9 +25,10 @@ const AddNewPatient = () => {
     const [patientGender, setPatientGender] = useState("")
     const [tests, setTests] = useState("")
     const [packages, setPackage] = useState("")
+    const [hospital, setHospital] = useState("")
 
     const [amount, setAmount] = useState(0)
-
+    const [discount, setDiscount] = useState(0);
     const [reffered, setReffered] = useState(1)
 
     //Doctor Fields
@@ -36,16 +41,16 @@ const AddNewPatient = () => {
     const [doctorGender, setDoctorGender] = useState("")
 
     //Hospital Fields
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobileNumber, setMobileNumber] = useState("");
-    const [address, setAddress] = useState("");
+    const [hospitalName, setHospitalName] = useState("")
+    const [hospitalEmail, setHospitalEmail] = useState("")
+    const [hospitalMobileNumber, setHospitalMobileNumber] = useState("")
+    const [hospitalAddress, setHospitalAddress] = useState("")
 
     const getPatientListResponse = useSelector((state) => state.getPatientListReducer.data);
     const getDoctorListResponse = useSelector((state) => state.getDoctorListReducer.data);
     const getTestListResponse = useSelector((state) => state.getTestListReducer.data);
     const getPackageListResponse = useSelector((state) => state.getPackageListReducer.data);
+    const getHospitalListResponse = useSelector((state) => state.getHospitalListReducer.data);
 
 
     const [selectedOption, setSelectedOption] = useState('');
@@ -61,7 +66,25 @@ const AddNewPatient = () => {
     const [selectedOptionNameDoctor, setSelectedOptionNameDoctor] = useState('');
     const [isDropdownOpenDoctor, setIsDropdownOpenDoctor] = useState(false);
 
-    const dispatch = useDispatch()
+    const [selectedOptionHospital, setSelectedOptionHospital] = useState('');
+    const [selectedOptionNameHospital, setSelectedOptionNameHospital] = useState('');
+    const [isDropdownOpenHospital, setIsDropdownOpenHospital] = useState(false);
+
+
+    useEffect(() => {
+
+        if (selectedOptionName === "") {
+
+            setSelectedOption("");
+            setPatientFirstName("")
+            setPatientLastName("")
+            setPatientAddress("")
+            setPatientEmail("")
+            setPatientMobile("")
+
+        }
+
+    }, [selectedOptionName])
 
     const handleInputChange = (event) => {
         // setSelectedOption(event.target.value);
@@ -73,6 +96,12 @@ const AddNewPatient = () => {
         // setSelectedOption(event.target.value);
         setSelectedOptionNamePackage(event.target.value);
         setIsDropdownOpenPackage(true);
+    };
+
+    const handleInputChangeHospital = (event) => {
+        // setSelectedOption(event.target.value);
+        setSelectedOptionNameHospital(event.target.value);
+        setIsDropdownOpenHospital(true);
     };
 
     const handleSelectChange = (item) => {
@@ -98,6 +127,10 @@ const AddNewPatient = () => {
         item.name.toLowerCase().includes(selectedOptionNamePackage.toLowerCase())
     );
 
+    const filteredOptionsHospital = getHospitalListResponse?.data.filter(item =>
+        item.name.toLowerCase().includes(selectedOptionNameHospital.toLowerCase())
+    );
+
 
     const handleInputChangeDoctor = (event) => {
         // setSelectedOption(event.target.value);
@@ -116,11 +149,22 @@ const AddNewPatient = () => {
         setIsDropdownOpenDoctor(false);
     };
 
+    const handleSelectChangeHospital = (item) => {
+        setSelectedOptionHospital(item._id);
+        setSelectedOptionNameHospital(item.name);
+        setHospitalName(item.name)
+        setHospitalEmail(item.email)
+        setHospitalMobileNumber(item.mobileNumber)
+        setHospitalAddress(item.address)
+        setIsDropdownOpenHospital(false);
+    };
+
     const handleSelectChangePackage = (item) => {
         setSelectedOptionPackage(item._id);
         setSelectedOptionNamePackage(item.name);
         setIsDropdownOpenPackage(false);
         setAmount(item.amount)
+        setDiscount(item.discount)
     };
 
 
@@ -132,6 +176,7 @@ const AddNewPatient = () => {
         dispatch(getDoctorList(paylaod));
         dispatch(getPackageList(paylaod));
         dispatch(getTestList(paylaod));
+        dispatch(getHospitalList(paylaod));
 
     }, [])
 
@@ -182,7 +227,9 @@ const AddNewPatient = () => {
                 am += element.amount
                 setAmount(am)
             });
-        } else { setAmount(0) }
+        } else {
+            setAmount(0)
+        }
     }, [selectedOptionsTest])
 
     useEffect(() => {
@@ -198,6 +245,44 @@ const AddNewPatient = () => {
             setPackage(getPackageListResponse.data)
         }
     }, [getPackageListResponse])
+
+
+    useEffect(() => {
+        console.log("getHospitalListResponse ===>", getHospitalListResponse)
+        if (getHospitalListResponse != null && getHospitalListResponse.status == 1) {
+            setHospital(getHospitalListResponse.data);
+        }
+    }, [getHospitalListResponse]);
+
+
+
+
+    const onSubmitClick = () => {
+        if (discount > amount) {
+            alert("Discount amount must be less than amount")
+        }
+        else if (selectedOption == "") {
+            alert("Please Add Patient Details!")
+        }
+        else if (selectedOptionsTest.length == 0 && selectedOptionPackage == "") {
+            alert("Please select any test or package!")
+        } else {
+            const payload = {
+                userId: selectedOption,
+                testIds: selectedOptionsTest,
+                packageId: selectedOptionPackage,
+                doctorId: selectedOptionDoctor,
+                hospitalId: selectedOptionHospital,
+                amount: amount,
+                discount: discount,
+                commision: "",
+                date: "",
+                time: ""
+            };
+            dispatch(postBookingRecord(payload))
+        }
+    };
+
 
     return (
         <>
@@ -217,6 +302,7 @@ const AddNewPatient = () => {
                                         onChange={handleInputChange}
                                         style={{ width: 300 }}
                                         className='input_dropdown'
+                                        autoComplete='off'
                                     />
                                     <Button
                                         type="button"
@@ -275,27 +361,32 @@ const AddNewPatient = () => {
                             <div className='flex_input_box'>
                                 <div className='head_input_flex'>
                                     <Form.Label>First Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="text" placeholder="first name" value={patientFirstName} />
+                                    <Form.Control type="text" placeholder="first name" value={patientFirstName} autoComplete='off'
+                                    />
                                 </div>
                                 <div className='head_input_flex'>
                                     <Form.Label>Last Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="text" placeholder="last name" value={patientLastName} />
+                                    <Form.Control type="text" placeholder="last name" value={patientLastName} autoComplete='off'
+                                    />
                                 </div>
                             </div>
                             <div className='flex_input_box' style={{ marginTop: 16 }}>
                                 <div className='head_input_flex'>
                                     <Form.Label>Email <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="email" placeholder="email" value={patientEmail} />
+                                    <Form.Control type="email" placeholder="email" value={patientEmail} autoComplete='off'
+                                    />
                                 </div>
                                 <div className='head_input_flex'>
                                     <Form.Label>Mobile Number <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="number" placeholder="mobile number" value={patientMobile} />
+                                    <Form.Control type="number" placeholder="mobile number" value={patientMobile} autoComplete='off'
+                                    />
                                 </div>
                             </div>
                             <div className='flex_input_box' style={{ marginTop: 16 }}>
                                 <div className='head_input_flex'>
                                     <Form.Label>Address</Form.Label>
-                                    <Form.Control type="text" placeholder="address" value={patientAddress} />
+                                    <Form.Control type="text" placeholder="address" value={patientAddress} autoComplete='off'
+                                    />
                                 </div>
                                 <div className='head_input_flex'>
                                     <Form.Label>Gender <span style={{ color: '#10519e' }}>*</span></Form.Label>
@@ -318,6 +409,7 @@ const AddNewPatient = () => {
                                             onChange={handleInputChangeTest}
                                             style={{ width: '100%' }}
                                             readOnly
+                                            autoComplete='off'
                                         />
                                         <Button
                                             type="button"
@@ -385,10 +477,11 @@ const AddNewPatient = () => {
                                         <input
                                             id="dropdown-input"
                                             type="text"
-                                            placeholder='Search Patient'
+                                            placeholder='Search Package'
                                             value={selectedOptionNamePackage}
                                             onChange={handleInputChangePackage}
                                             style={{ width: '100%' }}
+                                            autoComplete='off'
                                         />
                                         <Button
                                             type="button"
@@ -448,23 +541,26 @@ const AddNewPatient = () => {
                                         onChange={(e) => {
                                             const selectedValue = e.target.value;
                                             if (selectedValue === "1") {
-                                                setReffered(1)
-                                            } else {
-                                                setReffered(2)
+                                                setReffered(1);
+                                            } else if (selectedValue === "2") {
+                                                setReffered(2);
+                                            } else if (selectedValue === "3") {
+                                                setReffered(3);
                                             }
                                         }}
                                     >
-                                        <option value="1">Consultant</option>
-                                        <option value="2">Corporate</option>
+                                        <option value="1">Self</option>
+                                        <option value="2">Consultant</option>
+                                        <option value="3">Corporate</option>
                                     </Form.Select>
                                 </div>
                             </div>
                         </Form.Group>
 
-                        {reffered == 1 && <div className='hidden_show'>
+                        {reffered == 2 && <div className='hidden_show'>
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <div style={{ marginBottom: 20 }}>
-                                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                                    <div style={{ position: 'relative', display: 'inline-block', width: '49.5%' }}>
                                         <input
                                             id="dropdown-input"
                                             type="text"
@@ -472,6 +568,7 @@ const AddNewPatient = () => {
                                             value={selectedOptionNameDoctor}
                                             onChange={handleInputChangeDoctor}
                                             className='search_input_dropdown_doctor'
+                                            autoComplete='off'
                                         />
                                         <Button
                                             type="button"
@@ -525,28 +622,28 @@ const AddNewPatient = () => {
                                 <div className='flex_input_box'>
                                     <div className='head_input_flex'>
                                         <Form.Label>First Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                        <Form.Control type="text" placeholder="first name" value={doctorFirstName} />
+                                        <Form.Control type="text" placeholder="first name" value={doctorFirstName} autoComplete='off' />
                                     </div>
                                     <div className='head_input_flex'>
                                         <Form.Label>Last Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                        <Form.Control type="text" placeholder="last name" value={doctorLastName} />
+                                        <Form.Control type="text" placeholder="last name" value={doctorLastName} autoComplete='off' />
                                     </div>
                                 </div>
                                 <div className='flex_input_box' style={{ marginTop: 16 }}>
                                     <div className='head_input_flex'>
                                         <Form.Label>Email <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                        <Form.Control type="email" placeholder="email" value={doctortEmail} />
+                                        <Form.Control type="email" placeholder="email" value={doctortEmail} autoComplete='off' />
                                     </div>
                                     <div className='head_input_flex'>
                                         <Form.Label>Mobile Number <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                        <Form.Control type="number" placeholder="mobile number" value={doctorMobileNumber} />
+                                        <Form.Control type="number" placeholder="mobile number" value={doctorMobileNumber} autoComplete='off' />
                                     </div>
                                 </div>
-                                <div className='flex_input_box' style={{ marginTop: 16 }}>
-                                    {/* <div className='head_input_flex'>
+                                {/* <div className='flex_input_box' style={{ marginTop: 16 }}>
+                                    <div className='head_input_flex'>
                                         <Form.Label>Address</Form.Label>
                                         <Form.Control type="text" placeholder="address" value={doctorAddress} />
-                                    </div> */}
+                                    </div>
                                     <div className='head_input_flex' style={{ width: '49.5%' }}>
                                         <Form.Label>Gender <span style={{ color: '#10519e' }}>*</span></Form.Label>
                                         <Form.Select aria-label="Default select example">
@@ -555,40 +652,93 @@ const AddNewPatient = () => {
                                             <option value="2">Female</option>
                                         </Form.Select>
                                     </div>
-                                </div>
+                                </div> */}
                             </Form.Group>
                         </div>}
 
-                        {reffered == 2 &&
+                        {reffered == 3 &&
                             <div className=''>
                                 <Form.Group className="mb-3" controlId="formBasicEmail">
+                                    <div style={{ marginBottom: 20 }}>
+                                        <div style={{ position: 'relative', display: 'inline-block', width: '49.4%' }}>
+                                            <input
+                                                id="dropdown-input"
+                                                type="text"
+                                                placeholder='Search Corporate'
+                                                value={selectedOptionNameHospital}
+                                                onChange={handleInputChangeHospital}
+                                                className='search_input_dropdown_doctor'
+                                                autoComplete='off'
+                                            />
+                                            <Button
+                                                type="button"
+                                                onClick={() => setIsDropdownOpenHospital(!isDropdownOpenHospital)}
+                                                style={{
+                                                    marginLeft: '5px',
+                                                    right: 12,
+                                                    background: 'transparent',
+                                                    border: '1px solid #898686',
+                                                    color: '#898686',
+                                                    padding: 3,
+                                                    borderRadius: 4,
+                                                    position: 'absolute',
+                                                    top: 6,
+                                                }}
+                                            >
+                                                ▼
+                                            </Button>
+                                            {isDropdownOpenHospital && (
+                                                <ul
+                                                    style={{
+                                                        position: 'absolute',
+                                                        zIndex: 1,
+                                                        backgroundColor: 'white',
+                                                        border: '1px solid #ccc',
+                                                        listStyleType: 'none',
+                                                        margin: 0,
+                                                        padding: '5px',
+                                                        width: '100%',
+                                                        maxHeight: '150px',
+                                                        overflowY: 'auto',
+                                                    }}
+                                                >
+                                                    {filteredOptionsHospital.length > 0 ? (
+                                                        filteredOptionsHospital.map((item) => (
+                                                            <li
+                                                                key={item._id}
+                                                                onClick={() => handleSelectChangeHospital(item)}
+                                                                style={{ padding: '5px', cursor: 'pointer' }}
+                                                            >
+                                                                {item.name}
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li style={{ padding: '5px' }}>No results found</li>
+                                                    )}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    </div>
                                     <div className='flex_input_box'>
                                         <div className='head_input_flex'>
-                                            <Form.Label>First Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                            <Form.Control type="text" placeholder="first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                            <Form.Label>Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
+                                            <Form.Control type="text" placeholder="name" autoComplete='off' value={hospitalName} onChange={(e) => setHospitalName(e.target.value)} />
                                         </div>
                                         <div className='head_input_flex'>
-                                            <Form.Label>Last Name <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                            <Form.Control type="text" placeholder="last name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                                            <Form.Label>Email <span style={{ color: '#10519e' }}>*</span></Form.Label>
+                                            <Form.Control type="email" placeholder="email" autoComplete='off' value={hospitalEmail} onChange={(e) => setHospitalEmail(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className='flex_input_box' style={{ marginTop: 16 }}>
                                         <div className='head_input_flex'>
-                                            <Form.Label>Email <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                            <Form.Control type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                        </div>
-                                        <div className='head_input_flex'>
                                             <Form.Label>Mobile Number <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                            <Form.Control type="number" placeholder="mobile number" value={mobileNumber} onChange={(v) => setMobileNumber(v.target.value)} />
+                                            <Form.Control type="number" placeholder="mobile number" value={hospitalMobileNumber} onChange={(v) => setHospitalMobileNumber(v.target.value)} />
                                         </div>
-                                    </div>
-                                    <div className='flex_input_box' style={{ width: '49.5%', marginTop: 16 }}>
                                         <div className='head_input_flex'>
                                             <Form.Label>Address <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                            <Form.Control type="type" placeholder="address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                            <Form.Control type="type" placeholder="address" autoComplete='off' value={hospitalAddress} onChange={(e) => setHospitalAddress(e.target.value)} />
                                         </div>
                                     </div>
-
                                 </Form.Group>
                             </div>
                         }
@@ -597,23 +747,23 @@ const AddNewPatient = () => {
                             <div className='flex_input_box'>
                                 <div className='head_input_flex'>
                                     <Form.Label>Amount <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="number" placeholder="amount" disabled value={amount} />
+                                    <Form.Control type="number" placeholder="amount" disabled autoComplete='off' value={amount} />
                                 </div>
                                 <div className='head_input_flex'>
                                     <Form.Label>Discount <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="number" placeholder="discount" />
+                                    <Form.Control type="number" placeholder="discount" autoComplete='off' value={discount} onChange={(e) => setDiscount(e.target.value)} />
                                 </div>
                             </div>
                             <div className='flex_input_box' style={{ width: '49.5%', marginTop: 16 }}>
                                 <div className='head_input_flex'>
-                                    <Form.Label>Commision % <span style={{ color: '#10519e' }}>*</span></Form.Label>
-                                    <Form.Control type="number" placeholder="Corporate" style={{ color: '#000' }} value="Corporate" />
+                                    <Form.Label>Commission% <span style={{ color: '#10519e' }}>*</span></Form.Label>
+                                    <Form.Control type="number" placeholder="Corporate" autoComplete='off' style={{ color: '#000' }} value="Corporate" />
                                 </div>
                             </div>
                         </Form.Group>
 
-                        <div className='submit_btn' >
-                            <Button type="submit">Submit</Button>
+                        <div className='submit_btn'>
+                            <Button onClick={() => onSubmitClick()}> Submit</Button>
                         </div>
                     </Form>
 

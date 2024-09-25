@@ -8,12 +8,13 @@ import { getBookingRecord } from '../../redux/getBookingRecordSlice';
 
 const Booking = () => {
 
+    const navigation = useNavigate();
+    const dispatch = useDispatch();
+
     const [bookings, setBookings] = useState([])
     const getBookingListSuccess = useSelector((state) => state.getBookingRecordReducer.data);
 
-    const navigation = useNavigate();
 
-    const dispatch = useDispatch()
 
     useEffect(() => {
         console.log("Boooking")
@@ -52,22 +53,22 @@ const Booking = () => {
                         <thead className='tabel_head'>
                             <tr>
                                 <th>Name</th>
-                                <th>Email</th>
-                                <th>Mobile Number</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                                <th>Option</th>
+                                <th>Test/Package</th>
+                                <th>Amount</th>
+                                <th>Discount</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {/* {hospital.length > 0 && hospital.map((item) => (
+                            {bookings.length > 0 && bookings.map((item) => (
                                 <tr >
-                                    <td>{item.firstName + " " + item.lastName}</td>
-                                    <td> {item.email}</td>
-                                    <td>{item.mobileNumber}</td>
-                                    <td>{item.address}</td>
-                                    <td>
+                                    <td>{item.userId.firstName + " " + item.userId.lastName}</td>
+                                    <td>sfd</td>
+                                    <td>{item.amount}</td>
+                                    <td>{item.discountAmount}</td>
+                                    <td>{item.bookingDate}</td>
+                                    {/* <td>
                                         <div className='switch_btn_center'>
                                             <div className={`switch ${item.isActive ? 'on' : 'off'}`} onClick={() => toggleSwitch(item)}>
                                                 <div className="toggle"></div>
@@ -77,9 +78,9 @@ const Booking = () => {
                                     <td>
                                         <EditIcon onClick={() => onEditClick(item)} />
                                         <DeleteForeverIcon onClick={() => onDeleteClick(item)} style={{ marginLeft: 20 }} />
-                                    </td>
+                                    </td> */}
                                 </tr>
-                            ))} */}
+                            ))}
                         </tbody>
                     </Table>
                 </div >

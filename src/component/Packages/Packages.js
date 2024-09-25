@@ -121,6 +121,7 @@ const Packages = () => {
                     amount: amount,
                     image: imageLocation,
                 };
+                setOpen(false);
                 dispatch(updatePackage(payload))
             }
         }
